@@ -1,7 +1,6 @@
 const connection = require("../db/connection");
-const { SqlTopicsTable } = require("./support/sql/sql-topics-table");
 
+const gTableName = "topics";
 module.exports.selectAllTopics = () => {
-  const topicsTable = new SqlTopicsTable(connection);
-  return topicsTable.selectAllTopics();
+  return connection.query(`SELECT * FROM ${gTableName};`);
 };
