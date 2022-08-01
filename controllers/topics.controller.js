@@ -1,6 +1,8 @@
 const { response } = require("express");
+const { selectAllTopics } = require("../models/topics.model");
 
 module.exports.getTopics = (request, response) => {
-  console.log("Controller get topics");
-  response.send();
+  selectAllTopics().then(({ rows: topics }) => {
+    response.send({ topics });
+  });
 };
