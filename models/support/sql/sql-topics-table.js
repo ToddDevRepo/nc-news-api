@@ -1,12 +1,13 @@
-const { SqlTable } = require("./core/sql-table");
+class SqlTopicsTable {
+  #_db;
+  #_name = "topics";
 
-class SqlTopicsTable extends SqlTable {
   constructor(db) {
-    super(db, { name: "topics", fields: ["slug", "description"] });
+    this.#_db = db;
   }
 
   selectAllTopics() {
-    return this.buildSelectAll().send();
+    return this.#_db.query(`SELECT * FROM ${this.#_name};`);
   }
 }
 
