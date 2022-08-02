@@ -10,7 +10,8 @@ app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
 
 //// Error Handling ///
 app.use((err, req, res, next) => {
-  res.status(err.code).send(err);
+  if (err.status) res.status(err.status).send(err);
+  else next(err);
 });
 
 module.exports.app = app;
