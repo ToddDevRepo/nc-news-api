@@ -4,7 +4,7 @@ const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const { Endpoints } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
-const { articleNotFoundError } = require("../errors");
+const { articleNotFoundError, badRequestError } = require("../errors");
 
 beforeEach(() => {
   return seed(testData);
@@ -67,12 +67,20 @@ describe(Endpoints.ARTICLES_END, () => {
           });
         });
     });
-    test("path with valid, but non-existent id returns 404 not found", () => {
+    test("path with valid but non-existent id returns 404 not found", () => {
       return request(app)
         .get(`${Endpoints.ARTICLES_END}/1000`)
         .expect(404)
         .then(({ body }) => {
           expect(body).toEqual(articleNotFoundError);
+        });
+    });
+    test("path with invalid id returns 400 bad request", () => {
+      return request(app)
+        .get(`${Endpoints.ARTICLES_END}/badger`)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body).toEqual(badRequestError);
         });
     });
   });
