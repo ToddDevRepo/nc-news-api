@@ -4,6 +4,7 @@ const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const { Endpoints } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
+const { articleNotFoundError } = require("../errors");
 
 beforeEach(() => {
   return seed(testData);
@@ -64,6 +65,14 @@ describe(Endpoints.ARTICLES_END, () => {
               comment_count: 13,
             },
           });
+        });
+    });
+    test("path with valid, but non-existent id returns 404 not found", () => {
+      return request(app)
+        .get(`${Endpoints.ARTICLES_END}/1000`)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body).toEqual(articleNotFoundError);
         });
     });
   });

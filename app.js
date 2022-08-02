@@ -8,4 +8,9 @@ const app = express();
 app.get(Endpoints.TOPICS_END, getTopics);
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
 
+//// Error Handling ///
+app.use((err, req, res, next) => {
+  res.status(err.code).send(err);
+});
+
 module.exports.app = app;

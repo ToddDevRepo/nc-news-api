@@ -3,12 +3,14 @@ const {
   countCommentsByAuthorAsync: countCommentsAsync,
 } = require("../models/comments.model");
 
-module.exports.getArticleById = async (request, response) => {
+module.exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
-  const {
-    rows: [article],
-  } = await selectArticleById(article_id);
-  const count = await countCommentsAsync(article.author);
-  article.comment_count = count;
-  response.send({ article });
+  try {
+    const article = await selectArticleById(article_id);
+    const count = await countCommentsAsync(article.author);
+    article.comment_count = count;
+    response.send({ article });
+  } catch (error) {
+    next(error);
+  }
 };
