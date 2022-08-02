@@ -14,3 +14,10 @@ PGDATABASE=<name of your development database>
 
 In your .env.test file, add the line:
 PGDATABASE=<name of your test database>
+
+## API Functions
+
+GET /api/topics
+Returns an object with the form {topics: [<list of topics>]}
+
+<list of topics> is an array containing all the arrays currently stored on the database.
