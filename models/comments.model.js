@@ -1,5 +1,4 @@
 const connection = require("../db/connection");
-const { CommentsTable } = require("./support/sql/comments-table");
 
 const gTableName = "comments";
 const gAuthorField = "author";
