@@ -116,6 +116,14 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.msg).toEqual(unprocessableEntity.msg);
     });
+    test("returns with status 422 (unprocessable entity) when increment is not number", async () => {
+      const { body } = await request(app)
+        .patch(`${Endpoints.ARTICLES_END}/2`)
+        .send({ inc_votes: "badger" })
+        .expect(422);
+
+      expect(body.msg).toEqual(unprocessableEntity.msg);
+    });
     test("path with valid but non-existent id returns 404 not found", () => {
       return request(app)
         .patch(`${Endpoints.ARTICLES_END}/1000`)

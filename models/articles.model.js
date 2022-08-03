@@ -25,7 +25,7 @@ GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
 };
 
 module.exports.updateArticleVotes = async (article_id, incVotes) => {
-  if (!incVotes) return Promise.reject(unprocessableEntity);
+  if (isNaN(incVotes)) return Promise.reject(unprocessableEntity);
   const {
     rows: [result],
   } = await connection.query(
