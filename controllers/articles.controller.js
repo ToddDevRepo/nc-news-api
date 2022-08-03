@@ -15,11 +15,9 @@ module.exports.getArticleById = async (request, response, next) => {
 
 module.exports.updateVotesForArticleId = async (request, response, next) => {
   const { article_id } = request.params;
-  const { body: incCmd } = request;
+  const { body: incObj } = request;
   try {
-    const article = await selectArticleById(article_id);
-    const newVotes = article.votes + incCmd.inc_votes;
-    const updated = await incrementArticleVotes(article_id, newVotes);
+    const updated = await incrementArticleVotes(article_id, incObj.inc_votes);
     response.send({ updatedArticle: updated });
   } catch (error) {
     next(error);
