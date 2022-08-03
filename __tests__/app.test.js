@@ -72,7 +72,7 @@ describe(Endpoints.ARTICLES_END, () => {
         .get(`${Endpoints.ARTICLES_END}/1000`)
         .expect(404)
         .then(({ body }) => {
-          expect(body).toEqual(articleNotFoundError);
+          expect(body.msg).toEqual(articleNotFoundError.msg);
         });
     });
     test("path with invalid id returns 400 bad request", () => {
@@ -80,7 +80,7 @@ describe(Endpoints.ARTICLES_END, () => {
         .get(`${Endpoints.ARTICLES_END}/badger`)
         .expect(400)
         .then(({ body }) => {
-          expect(body).toEqual(badRequestError);
+          expect(body.msg).toEqual(badRequestError.msg);
         });
     });
   });
