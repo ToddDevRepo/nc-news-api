@@ -21,7 +21,6 @@ GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
 };
 
 module.exports.updateArticleVotes = async (article_id, newVotes) => {
-  console.log("Model increment votes");
   const {
     rows: [result],
   } = await connection.query(
