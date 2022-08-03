@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   getArticleById,
-  patchArticleById,
+  updateVotesForArticleId: patchArticleById,
 } = require("./controllers/articles.controller");
 const { getTopics } = require("./controllers/topics.controller");
 const { badRequestError } = require("./errors");

@@ -13,7 +13,7 @@ module.exports.getArticleById = async (request, response, next) => {
   }
 };
 
-module.exports.patchArticleById = async (request, response, next) => {
+module.exports.updateVotesForArticleId = async (request, response, next) => {
   console.log("Patch article controller");
   const { article_id } = request.params;
   const { body: incCmd } = request;
