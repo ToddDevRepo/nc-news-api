@@ -1,3 +1,4 @@
+const { unprocessableEntity } = require("../errors");
 const {
   selectArticleById,
   updateArticleVotes: incrementArticleVotes,
@@ -17,6 +18,7 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
   const { article_id } = request.params;
   const { body: incObj } = request;
   try {
+    if (!incObj.inc_votes) next(unprocessableEntity);
     const updated = await incrementArticleVotes(article_id, incObj.inc_votes);
     response.send({ updatedArticle: updated });
   } catch (error) {

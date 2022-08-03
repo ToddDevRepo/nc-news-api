@@ -1,5 +1,9 @@
 const connection = require("../db/connection");
-const { articleNotFoundError, badRequestError } = require("../errors");
+const {
+  articleNotFoundError,
+  badRequestError,
+  unprocessableEntity,
+} = require("../errors");
 const { DBTables } = require("../globals");
 
 module.exports.selectArticleById = async (articleId) => {
@@ -21,6 +25,7 @@ GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
 };
 
 module.exports.updateArticleVotes = async (article_id, incVotes) => {
+  if (!incVotes) return Promise.reject(unprocessableEntity);
   const {
     rows: [result],
   } = await connection.query(

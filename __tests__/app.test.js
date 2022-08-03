@@ -4,7 +4,11 @@ const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const { Endpoints } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
-const { articleNotFoundError, badRequestError } = require("../errors");
+const {
+  articleNotFoundError,
+  badRequestError,
+  unprocessableEntity,
+} = require("../errors");
 
 beforeEach(() => {
   return seed(testData);
@@ -104,9 +108,18 @@ describe(Endpoints.ARTICLES_END, () => {
       };
       expect(body).toEqual({ updatedArticle: expected });
     });
+    test("returns with status 422 (unprocessable entity) when there is no send body", async () => {
+      const { body } = await request(app)
+        .patch(`${Endpoints.ARTICLES_END}/2`)
+        .send()
+        .expect(422);
+
+      expect(body.msg).toEqual(unprocessableEntity.msg);
+    });
     test("path with valid but non-existent id returns 404 not found", () => {
       return request(app)
         .patch(`${Endpoints.ARTICLES_END}/1000`)
+        .send({ inc_votes: 1 })
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toEqual(articleNotFoundError.msg);
@@ -115,6 +128,7 @@ describe(Endpoints.ARTICLES_END, () => {
     test("path with invalid id returns 400 bad request", () => {
       return request(app)
         .patch(`${Endpoints.ARTICLES_END}/badger`)
+        .send({ inc_votes: 1 })
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toEqual(badRequestError.msg);

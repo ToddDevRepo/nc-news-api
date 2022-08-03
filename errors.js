@@ -7,3 +7,8 @@ module.exports.badRequestError = {
   status: 400,
   msg: "Bad request!",
 };
+
+module.exports.unprocessableEntity = {
+  status: 422,
+  msg: "Could not process send data!",
+};
