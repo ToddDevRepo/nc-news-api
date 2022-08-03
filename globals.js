@@ -20,6 +20,9 @@ class DBTables {
       author: "author",
     },
   };
+  static Topics = {
+    name: "topics",
+  };
 }
 
 module.exports.Endpoints = Endpoints;
