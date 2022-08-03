@@ -104,5 +104,21 @@ describe(Endpoints.ARTICLES_END, () => {
       };
       expect(body).toEqual({ updatedArticle: expected });
     });
+    test("path with valid but non-existent id returns 404 not found", () => {
+      return request(app)
+        .patch(`${Endpoints.ARTICLES_END}/1000`)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toEqual(articleNotFoundError.msg);
+        });
+    });
+    test("path with invalid id returns 400 bad request", () => {
+      return request(app)
+        .patch(`${Endpoints.ARTICLES_END}/badger`)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toEqual(badRequestError.msg);
+        });
+    });
   });
 });
