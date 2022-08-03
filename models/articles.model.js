@@ -1,25 +1,19 @@
 const connection = require("../db/connection");
 const { articleNotFoundError } = require("../errors");
+const { DBTables } = require("../globals");
 
 const gTableName = "articles";
 
-const gArticlesTable = "articles";
-const gArticlesIdField = "article_id";
-const gArticlesAuthorField = "author";
-const gArticlesCommentCountField = "comment_count";
-
-const gCommentsTable = "comments";
-const gCommentsAuthorField = "author";
-
 module.exports.selectArticleById = async (articleId) => {
+  const commentCountField = "comment_count";
   const {
     rows: [article],
   } = await connection.query(
-    `SELECT ${gArticlesTable}.*, COUNT(comment_id) AS ${gArticlesCommentCountField}
-FROM ${gArticlesTable}
-RIGHT JOIN ${gCommentsTable} ON ${gCommentsTable}.${gCommentsAuthorField} = ${gArticlesTable}.${gArticlesAuthorField}
-WHERE ${gArticlesTable}.${gArticlesIdField} = $1
-GROUP BY ${gArticlesTable}.${gArticlesIdField};`,
+    `SELECT ${DBTables.Articles.name}.*, COUNT(${DBTables.Comments.Fields.id}) AS ${commentCountField}
+FROM ${DBTables.Articles.name}
+RIGHT JOIN ${DBTables.Comments.name} ON ${DBTables.Comments.name}.${DBTables.Comments.Fields.author} = ${DBTables.Articles.name}.${DBTables.Articles.Fields.author}
+WHERE ${DBTables.Articles.name}.${DBTables.Articles.Fields.id} = $1
+GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
     [articleId]
   );
 
