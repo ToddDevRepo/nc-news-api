@@ -2,8 +2,6 @@ const connection = require("../db/connection");
 const { articleNotFoundError } = require("../errors");
 const { DBTables } = require("../globals");
 
-const gTableName = "articles";
-
 module.exports.selectArticleById = async (articleId) => {
   const commentCountField = "comment_count";
   const {
@@ -20,4 +18,17 @@ GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
   if (!article) return Promise.reject(articleNotFoundError);
   article[commentCountField] = parseInt(article[commentCountField]);
   return article;
+};
+
+module.exports.updateArticleVotes = async (article_id, newVotes) => {
+  console.log("Model increment votes");
+  const {
+    rows: [result],
+  } = await connection.query(
+    `UPDATE ${DBTables.Articles.name}
+    SET ${DBTables.Articles.Fields.votes} = ${newVotes}
+    WHERE ${DBTables.Articles.Fields.id} = $1 RETURNING *;`,
+    [article_id]
+  );
+  return result;
 };

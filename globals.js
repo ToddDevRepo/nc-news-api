@@ -11,6 +11,7 @@ class DBTables {
     Fields: {
       id: "article_id",
       author: "author",
+      votes: "votes",
     },
   };
   static Comments = {
