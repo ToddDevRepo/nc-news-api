@@ -18,5 +18,6 @@ GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
   );
 
   if (!article) return Promise.reject(articleNotFoundError);
+  article[commentCountField] = parseInt(article[commentCountField]);
   return article;
 };

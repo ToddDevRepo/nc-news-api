@@ -7,7 +7,6 @@ module.exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
   try {
     const article = await selectArticleById(article_id);
-    article.comment_count = parseInt(article.comment_count);
     response.send({ article });
   } catch (error) {
     next(error);
