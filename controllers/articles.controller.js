@@ -14,3 +14,8 @@ module.exports.getArticleById = async (request, response, next) => {
     next(error);
   }
 };
+
+module.exports.patchArticleById = (request, response, next) => {
+  console.log("Patch article controller");
+  response.send({});
+};
