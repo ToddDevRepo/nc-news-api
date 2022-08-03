@@ -1,7 +1,4 @@
 const { selectArticleById } = require("../models/articles.model");
-const {
-  countCommentsByAuthorAsync: countCommentsAsync,
-} = require("../models/comments.model");
 
 module.exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
