@@ -10,7 +10,6 @@ module.exports.getArticleById = async (request, response, next) => {
     article.comment_count = parseInt(article.comment_count);
     response.send({ article });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
