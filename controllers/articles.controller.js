@@ -7,10 +7,10 @@ module.exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
   try {
     const article = await selectArticleById(article_id);
-    const count = await countCommentsAsync(article.author);
-    article.comment_count = count;
+    article.comment_count = parseInt(article.comment_count);
     response.send({ article });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
