@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
+const { DBTables } = require("../globals");
 
-const gTableName = "topics";
 module.exports.selectAllTopics = () => {
-  return connection.query(`SELECT * FROM ${gTableName};`);
+  return connection.query(`SELECT * FROM ${DBTables.Topics.name};`);
 };
