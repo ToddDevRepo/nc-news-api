@@ -8,6 +8,7 @@ const {
   articleNotFoundError,
   badRequestError,
   unprocessableEntity,
+  topicNotFoundError,
 } = require("../errors");
 
 beforeEach(() => {
@@ -125,6 +126,14 @@ describe(Endpoints.ARTICLES_END, () => {
       body.articles.forEach((article) => {
         expect(article.topic).toBe(query);
       });
+    });
+    test("non-existent topic returns 404 article not found", async () => {
+      const query = "d; sdf";
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`)
+        .expect(404);
+
+      expect(body.msg).toBe(topicNotFoundError.msg);
     });
   });
   describe("PATCH", () => {

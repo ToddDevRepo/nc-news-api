@@ -3,6 +3,7 @@ const {
   articleNotFoundError,
   badRequestError,
   unprocessableEntity,
+  topicNotFoundError,
 } = require("../errors");
 const { DBTables, QueryTypes } = require("../globals");
 const {
@@ -49,15 +50,17 @@ module.exports.updateArticleVotes = async (article_id, incVotes) => {
 };
 
 module.exports.selectAllArticles = async (topic) => {
-  const sqlQuery = defineQuery(topic);
+  const sqlQuery = defineGetAllArticlesQuery(topic);
 
   const { rows: articles } = await connection.query(
     sqlQuery.str,
     sqlQuery.args
   );
+  console.log(articles);
+  if (articles.length === 0) return Promise.reject(topicNotFoundError);
   return articles;
 };
-function defineQuery(topic) {
+function defineGetAllArticlesQuery(topic) {
   const queryArgs = [];
   let queryStr = `SELECT ${prefixedArticlesId()},
       ${prefixedArticlesTitle()},
