@@ -49,7 +49,7 @@ describe(Endpoints.TOPICS_END, () => {
 });
 
 describe(Endpoints.ARTICLES_END, () => {
-  describe("GET", () => {
+  describe("GET by id", () => {
     test("article path with valid id returns status 200", () => {
       return request(app).get(`${Endpoints.ARTICLES_END}/2`).expect(200);
     });
@@ -86,6 +86,29 @@ describe(Endpoints.ARTICLES_END, () => {
         .then(({ body }) => {
           expect(body.msg).toEqual(badRequestError.msg);
         });
+    });
+  });
+  describe("GET", () => {
+    test("get all articles returns all the articles with status 200", async () => {
+      const { body } = await request(app)
+        .get(Endpoints.ARTICLES_END)
+        .expect(200);
+      console.log(body);
+
+      expect(body.articles).toHaveLength(12);
+      body.articles.forEach((article, idx) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
     });
   });
   describe("PATCH", () => {

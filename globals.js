@@ -11,7 +11,11 @@ class DBTables {
     Fields: {
       id: "article_id",
       author: "author",
+      body: "body",
       votes: "votes",
+      title: "title",
+      topic: "topic",
+      created_at: "created_at",
     },
   };
   static Comments = {
@@ -19,6 +23,7 @@ class DBTables {
     Fields: {
       id: "comment_id",
       author: "author",
+      article_id: "article_id",
     },
   };
   static Topics = {

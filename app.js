@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getArticleById,
   updateVotesForArticleId: patchArticleById,
+  getArticles,
 } = require("./controllers/articles.controller");
 const { getTopics } = require("./controllers/topics.controller");
 const { badRequestError } = require("./errors");
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.get(Endpoints.TOPICS_END, getTopics);
+app.get(Endpoints.ARTICLES_END, getArticles);
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
 app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
 
