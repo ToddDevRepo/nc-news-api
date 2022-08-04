@@ -170,6 +170,13 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.msg).toEqual(badQueryError.msg);
     });
+    test("400 bad query returned when sort_by is nonsense", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=badger`)
+        .expect(400);
+
+      expect(body.msg).toEqual(badQueryError.msg);
+    });
     test("allows search by topic", async () => {
       const query = "mitch";
       const { body } = await request(app).get(

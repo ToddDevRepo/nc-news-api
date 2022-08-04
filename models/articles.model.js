@@ -57,6 +57,7 @@ module.exports.selectAllArticles = async (
 ) => {
   const sortFields = { date: DBTables.Articles.Fields.created_at };
   sortBy = sortFields[sortBy];
+  if (!sortBy) return Promise.reject(badQueryError);
   if (!["desc", "asc"].includes(order.toLowerCase()))
     return Promise.reject(badQueryError);
   const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
