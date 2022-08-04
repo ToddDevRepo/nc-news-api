@@ -93,7 +93,6 @@ describe(Endpoints.ARTICLES_END, () => {
       const { body } = await request(app)
         .get(Endpoints.ARTICLES_END)
         .expect(200);
-      console.log(body);
 
       expect(body.articles).toHaveLength(12);
       body.articles.forEach((article, idx) => {
@@ -109,6 +108,12 @@ describe(Endpoints.ARTICLES_END, () => {
           })
         );
       });
+    });
+    test("correctly sets comment count", async () => {
+      const { body } = await request(app).get(Endpoints.ARTICLES_END);
+
+      const article = body.articles.find((article) => article.article_id === 9);
+      expect(article.comment_count).toBe(2);
     });
   });
   describe("PATCH", () => {
