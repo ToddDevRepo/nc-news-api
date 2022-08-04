@@ -32,7 +32,11 @@ module.exports.getArticles = async (request, response, next) => {
   const { query } = request;
   console.log(query);
   try {
-    const articles = await selectAllArticles(query[QueryTypes.topic]);
+    const articles = await selectAllArticles(
+      query[QueryTypes.topic],
+      query[QueryTypes.sortBy],
+      query[QueryTypes.order]
+    );
     response.send({ articles });
   } catch (error) {
     console.log(error);

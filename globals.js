@@ -7,6 +7,8 @@ class Endpoints {
 
 class QueryTypes {
   static topic = "topic";
+  static sortBy = "sort_by";
+  static order = "order";
 }
 
 class DBTables {
