@@ -30,7 +30,6 @@ module.exports.getArticles = async (request, response, next) => {
   console.log("Get articles controller");
   try {
     const articles = await selectAllArticles();
-    console.log({ articles });
     response.send({ articles });
   } catch (error) {
     console.log(error);

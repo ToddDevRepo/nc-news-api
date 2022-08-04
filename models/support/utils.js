@@ -23,3 +23,7 @@ module.exports.prefixedArticlesCreatedAt = () => {
 module.exports.prefixedArticlesVotes = () => {
   return `${DBTables.Articles.name}.${DBTables.Articles.Fields.votes}`;
 };
+
+module.exports.prefixedCommentsArticleId = () => {
+  return `${DBTables.Comments.name} ON ${DBTables.Comments.name}.${DBTables.Comments.Fields.article_id}`;
+};

@@ -12,6 +12,7 @@ const {
   prefixedArticlesAuthor,
   prefixedArticlesCreatedAt,
   prefixedArticlesVotes,
+  prefixedCommentsArticleId,
 } = require("./support/utils");
 
 const gCommentCountField = "comment_count";
@@ -48,7 +49,6 @@ module.exports.updateArticleVotes = async (article_id, incVotes) => {
 };
 
 module.exports.selectAllArticles = async () => {
-  console.log("Select all articles model");
   const { rows: articles } = await connection.query(
     `SELECT ${prefixedArticlesId()},
       ${prefixedArticlesTitle()},
@@ -60,10 +60,8 @@ module.exports.selectAllArticles = async () => {
          DBTables.Comments.Fields.id
        }) AS INT) AS ${gCommentCountField}
     FROM ${DBTables.Articles.name}
-    LEFT JOIN ${DBTables.Comments.name} ON ${DBTables.Comments.name}.${
-      DBTables.Comments.Fields.article_id
-    } = ${DBTables.Articles.name}.${DBTables.Articles.Fields.id}
-    GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`
+    LEFT JOIN ${prefixedCommentsArticleId()} = ${prefixedArticlesId()}
+    GROUP BY ${prefixedArticlesId()};`
   );
   console.log(articles);
   return articles;
