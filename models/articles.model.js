@@ -7,6 +7,7 @@ const {
   badQueryError,
 } = require("../errors");
 const { DBTables, QueryTypes } = require("../globals");
+const { SqlSanitiser } = require("./support/sql-sanitiser");
 const {
   prefixedArticlesId,
   prefixedArticlesTitle,
@@ -55,11 +56,11 @@ module.exports.selectAllArticles = async (
   sortBy = "date",
   order = "desc"
 ) => {
+  const sanitiser = new SqlSanitiser();
   const sortFields = { date: DBTables.Articles.Fields.created_at };
   sortBy = sortFields[sortBy];
   if (!sortBy) return Promise.reject(badQueryError);
-  if (!["desc", "asc"].includes(order.toLowerCase()))
-    return Promise.reject(badQueryError);
+  if (sanitiser.isInvalidOrder(order)) return Promise.reject(badQueryError);
   const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
   console.log(sqlQuery.str);
   const { rows: articles } = await connection.query(
