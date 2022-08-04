@@ -2,7 +2,7 @@ const request = require("supertest");
 const { app } = require("../app");
 const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const { Endpoints } = require("../globals");
+const { Endpoints, Query, QueryTypes } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
 const {
   articleNotFoundError,
@@ -114,6 +114,17 @@ describe(Endpoints.ARTICLES_END, () => {
 
       const article = body.articles.find((article) => article.article_id === 9);
       expect(article.comment_count).toBe(2);
+    });
+    test("allows search by topic", async () => {
+      const query = "mitch";
+      const { body } = await request(app).get(
+        `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`
+      );
+
+      expect(body.articles).toHaveLength(11);
+      body.articles.forEach((article) => {
+        expect(article.topic).toBe(query);
+      });
     });
   });
   describe("PATCH", () => {

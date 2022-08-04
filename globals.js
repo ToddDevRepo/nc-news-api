@@ -5,6 +5,10 @@ class Endpoints {
   static ARTICLES_BY_ID_END = `${Endpoints.ARTICLES_END}/:article_id`;
 }
 
+class QueryTypes {
+  static topic = "topic";
+}
+
 class DBTables {
   static Articles = {
     name: "articles",
@@ -33,3 +37,4 @@ class DBTables {
 
 module.exports.Endpoints = Endpoints;
 module.exports.DBTables = DBTables;
+module.exports.QueryTypes = QueryTypes;

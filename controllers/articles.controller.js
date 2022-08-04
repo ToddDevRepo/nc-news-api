@@ -1,4 +1,5 @@
 const { unprocessableEntity } = require("../errors");
+const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
   selectArticleById,
   updateArticleVotes: incrementArticleVotes,
@@ -28,8 +29,10 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
 
 module.exports.getArticles = async (request, response, next) => {
   console.log("Get articles controller");
+  const { query } = request;
+  console.log(query);
   try {
-    const articles = await selectAllArticles();
+    const articles = await selectAllArticles(query[QueryTypes.topic]);
     response.send({ articles });
   } catch (error) {
     console.log(error);

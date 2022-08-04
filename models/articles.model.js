@@ -4,7 +4,7 @@ const {
   badRequestError,
   unprocessableEntity,
 } = require("../errors");
-const { DBTables } = require("../globals");
+const { DBTables, QueryTypes } = require("../globals");
 const {
   prefixedArticlesId,
   prefixedArticlesTitle,
@@ -48,9 +48,18 @@ module.exports.updateArticleVotes = async (article_id, incVotes) => {
   return result;
 };
 
-module.exports.selectAllArticles = async () => {
+module.exports.selectAllArticles = async (topic) => {
+  const sqlQuery = defineQuery(topic);
+
   const { rows: articles } = await connection.query(
-    `SELECT ${prefixedArticlesId()},
+    sqlQuery.str,
+    sqlQuery.args
+  );
+  return articles;
+};
+function defineQuery(topic) {
+  const queryArgs = [];
+  let queryStr = `SELECT ${prefixedArticlesId()},
       ${prefixedArticlesTitle()},
       ${prefixedArticlesTopic()},
       ${prefixedArticlesAuthor()},
@@ -60,9 +69,11 @@ module.exports.selectAllArticles = async () => {
          DBTables.Comments.Fields.id
        }) AS INT) AS ${gCommentCountField}
     FROM ${DBTables.Articles.name}
-    LEFT JOIN ${prefixedCommentsArticleId()} = ${prefixedArticlesId()}
-    GROUP BY ${prefixedArticlesId()};`
-  );
-  console.log(articles);
-  return articles;
-};
+    LEFT JOIN ${prefixedCommentsArticleId()} = ${prefixedArticlesId()}`;
+  if (topic) {
+    queryStr += ` WHERE ${QueryTypes.topic} = $1`;
+    queryArgs.push(topic);
+  }
+  queryStr += ` GROUP BY ${prefixedArticlesId()};`;
+  return { str: queryStr, args: queryArgs };
+}
