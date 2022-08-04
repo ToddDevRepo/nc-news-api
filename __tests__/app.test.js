@@ -135,6 +135,14 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.msg).toBe(topicNotFoundError.msg);
     });
+    test("bad query category is ignored", async () => {
+      const query = "mitch";
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${"; sdhfk"}=${query}`)
+        .expect(200);
+
+      expect(body.articles).toHaveLength(12);
+    });
   });
   describe("PATCH", () => {
     test("returns with status 200 and an article with incremented votes", async () => {
