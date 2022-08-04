@@ -1,7 +1,16 @@
-class SqlSanitiser {
-  isInvalidOrder(order) {
-    return !["desc", "asc"].includes(order.toLowerCase());
+class SortBySanitiser {
+  #_lookupTable;
+  constructor(lookupTable) {
+    this.#_lookupTable = lookupTable;
+  }
+
+  isValidOrder(order) {
+    return ["desc", "asc"].includes(order.toLowerCase());
+  }
+
+  lookupSortBy(sortBy) {
+    return this.#_lookupTable[sortBy];
   }
 }
 
-module.exports.SqlSanitiser = SqlSanitiser;
+module.exports.SortBySanitiser = SortBySanitiser;
