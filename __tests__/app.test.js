@@ -10,6 +10,7 @@ const {
   badRequestError,
   unprocessableEntity,
   topicNotFoundError,
+  badQueryError,
 } = require("../errors");
 
 beforeEach(() => {
@@ -111,7 +112,13 @@ describe(Endpoints.ARTICLES_END, () => {
         );
       });
     });
-    test("articles returned in descending date order", async () => {
+    test("correctly sets comment count of each article", async () => {
+      const { body } = await request(app).get(Endpoints.ARTICLES_END);
+
+      const article = body.articles.find((article) => article.article_id === 9);
+      expect(article.comment_count).toBe(2);
+    });
+    test("articles returned in descending date order by default", async () => {
       const { body } = await request(app)
         .get(Endpoints.ARTICLES_END)
         .expect(200);
@@ -120,11 +127,48 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("correctly sets comment count", async () => {
-      const { body } = await request(app).get(Endpoints.ARTICLES_END);
+    test("articles returned in descending date order when desc used", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=desc`)
+        .expect(200);
 
-      const article = body.articles.find((article) => article.article_id === 9);
-      expect(article.comment_count).toBe(2);
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending date order if you set order to ask", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=asc`)
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: false,
+      });
+    });
+    test("articles returned in descending date order when order is sent in uppercase", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=DESC`)
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending date order when order is sent in uppercase", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=ASC`)
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: false,
+      });
+    });
+    test("400 bad query returned when order is nonsense", async () => {
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=badger`)
+        .expect(400);
+
+      expect(body.msg).toEqual(badQueryError.msg);
     });
     test("allows search by topic", async () => {
       const query = "mitch";

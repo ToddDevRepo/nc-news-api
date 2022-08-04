@@ -4,6 +4,7 @@ const {
   badRequestError,
   unprocessableEntity,
   topicNotFoundError,
+  badQueryError,
 } = require("../errors");
 const { DBTables, QueryTypes } = require("../globals");
 const {
@@ -56,6 +57,8 @@ module.exports.selectAllArticles = async (
 ) => {
   const sortFields = { date: DBTables.Articles.Fields.created_at };
   sortBy = sortFields[sortBy];
+  if (!["desc", "asc"].includes(order.toLowerCase()))
+    return Promise.reject(badQueryError);
   const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
   console.log(sqlQuery.str);
   const { rows: articles } = await connection.query(
