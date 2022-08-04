@@ -177,6 +177,94 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.msg).toEqual(badQueryError.msg);
     });
+    test("articles returned in descending author order when desc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.author}&${QueryTypes.order}=desc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.author, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending author order when asc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.author}&${QueryTypes.order}=asc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.author, {
+        descending: false,
+      });
+    });
+    test("articles returned in descending title order when desc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.title}&${QueryTypes.order}=desc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.title, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending title order when asc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.title}&${QueryTypes.order}=asc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.title, {
+        descending: false,
+      });
+    });
+    test("articles returned in descending votes order when desc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=desc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.votes, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending votes order when asc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=asc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.votes, {
+        descending: false,
+      });
+    });
+    test("articles returned in descending topics order when desc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.topic}&${QueryTypes.order}=desc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.topic, {
+        descending: true,
+      });
+    });
+    test("articles returned in ascending topics order when asc used", async () => {
+      const { body } = await request(app)
+        .get(
+          `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.topic}&${QueryTypes.order}=asc`
+        )
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.topic, {
+        descending: false,
+      });
+    });
     test("allows search by topic", async () => {
       const query = "mitch";
       const { body } = await request(app).get(

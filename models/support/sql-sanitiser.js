@@ -9,6 +9,7 @@ class SortBySanitiser {
   }
 
   lookupSortBy(sortBy) {
+    sortBy = sortBy.toLowerCase();
     return this.#_lookupTable[sortBy];
   }
 }
