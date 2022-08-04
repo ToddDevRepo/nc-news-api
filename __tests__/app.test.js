@@ -127,13 +127,13 @@ describe(Endpoints.ARTICLES_END, () => {
         expect(article.topic).toBe(query);
       });
     });
-    test("non-existent topic returns 404 article not found", async () => {
+    test("non-existent topic returns empty array", async () => {
       const query = "d; sdf";
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`)
-        .expect(404);
+        .expect(200);
 
-      expect(body.msg).toBe(topicNotFoundError.msg);
+      expect(body.articles).toHaveLength(0);
     });
     test("bad query category is ignored", async () => {
       const query = "mitch";

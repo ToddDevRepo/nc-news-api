@@ -57,7 +57,6 @@ module.exports.selectAllArticles = async (topic) => {
     sqlQuery.args
   );
   console.log(articles);
-  if (articles.length === 0) return Promise.reject(topicNotFoundError);
   return articles;
 };
 function defineGetAllArticlesQuery(topic) {
