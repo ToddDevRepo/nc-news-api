@@ -1,8 +1,9 @@
+const sorted = require("jest-sorted");
 const request = require("supertest");
 const { app } = require("../app");
 const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const { Endpoints, Query, QueryTypes } = require("../globals");
+const { Endpoints, Query, QueryTypes, DBTables } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
 const {
   articleNotFoundError,
@@ -89,7 +90,7 @@ describe(Endpoints.ARTICLES_END, () => {
         });
     });
   });
-  describe("GET", () => {
+  describe("GET all", () => {
     test("get all articles returns all the articles with status 200", async () => {
       const { body } = await request(app)
         .get(Endpoints.ARTICLES_END)
@@ -108,6 +109,15 @@ describe(Endpoints.ARTICLES_END, () => {
             comment_count: expect.any(Number),
           })
         );
+      });
+    });
+    test("articles returned in descending date order", async () => {
+      const { body } = await request(app)
+        .get(Endpoints.ARTICLES_END)
+        .expect(200);
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: true,
       });
     });
     test("correctly sets comment count", async () => {

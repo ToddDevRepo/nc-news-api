@@ -49,9 +49,15 @@ module.exports.updateArticleVotes = async (article_id, incVotes) => {
   return result;
 };
 
-module.exports.selectAllArticles = async (topic) => {
-  const sqlQuery = defineGetAllArticlesQuery(topic);
-
+module.exports.selectAllArticles = async (
+  topic,
+  sortBy = "date",
+  order = "desc"
+) => {
+  const sortFields = { date: DBTables.Articles.Fields.created_at };
+  sortBy = sortFields[sortBy];
+  const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
+  console.log(sqlQuery.str);
   const { rows: articles } = await connection.query(
     sqlQuery.str,
     sqlQuery.args
@@ -59,7 +65,7 @@ module.exports.selectAllArticles = async (topic) => {
   console.log(articles);
   return articles;
 };
-function defineGetAllArticlesQuery(topic) {
+function defineGetAllArticlesQuery(topic, sortBy, order) {
   const queryArgs = [];
   let queryStr = `SELECT ${prefixedArticlesId()},
       ${prefixedArticlesTitle()},
@@ -76,6 +82,8 @@ function defineGetAllArticlesQuery(topic) {
     queryStr += ` WHERE ${QueryTypes.topic} = $1`;
     queryArgs.push(topic);
   }
-  queryStr += ` GROUP BY ${prefixedArticlesId()};`;
+  queryStr += ` GROUP BY ${prefixedArticlesId()}`;
+  if (sortBy && order) queryStr += ` ORDER BY ${sortBy} ${order}`;
+  queryStr += ";";
   return { str: queryStr, args: queryArgs };
 }
