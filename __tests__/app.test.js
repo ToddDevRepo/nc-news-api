@@ -12,6 +12,7 @@ const {
   topicNotFoundError,
   badQueryError,
 } = require("../errors");
+const { forEach } = require("../db/data/test-data/articles");
 
 beforeEach(() => {
   return seed(testData);
@@ -325,12 +326,24 @@ describe(Endpoints.ARTICLES_END, () => {
   });
   describe("get article comments", () => {
     test("get comments returns comments for given article", async () => {
-      const articleId = 2;
-      const body = await request(app).get(
-        `${Endpoints.ARTICLES_END}/2/comments`
-      );
+      const articleId = 9;
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+        .expect(200);
 
       console.log(body);
+      expect(body.comments).toHaveLength(2);
+      body.comments.forEach((comment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+          })
+        );
+      });
     });
   });
   describe("PATCH", () => {
