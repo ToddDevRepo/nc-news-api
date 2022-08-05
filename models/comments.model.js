@@ -1,11 +1,16 @@
 const connection = require("../db/connection");
 const { DBTables } = require("../globals");
+const { selectArticleById } = require("./articles.model");
 
 module.exports.selectArticleComments = async (articleId) => {
-  console.log("comments model");
-  const queryStr = `SELECT *
-FROM ${DBTables.Comments.name}
-    WHERE ${DBTables.Comments.Fields.article_id} = $1;`;
-  const { rows: comments } = await connection.query(queryStr, [articleId]);
+  const articleExistsPending = selectArticleById(articleId);
+  const getCommentsPending = connection.query(
+    `SELECT *
+    FROM ${DBTables.Comments.name}
+    WHERE ${DBTables.Comments.Fields.article_id} = $1;`,
+    [articleId]
+  );
+  const result = await Promise.all([getCommentsPending, articleExistsPending]);
+  const { rows: comments } = result[0];
   return comments;
 };

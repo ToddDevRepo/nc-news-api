@@ -331,7 +331,6 @@ describe(Endpoints.ARTICLES_END, () => {
         .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
         .expect(200);
 
-      console.log(body);
       expect(body.comments).toHaveLength(2);
       body.comments.forEach((comment) => {
         expect(comment).toEqual(
@@ -344,6 +343,30 @@ describe(Endpoints.ARTICLES_END, () => {
           })
         );
       });
+    });
+    test("get comments returns empty array for article with no comments", async () => {
+      const articleId = 2;
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+        .expect(200);
+
+      expect(body.comments).toHaveLength(0);
+    });
+    test("get comments returns 400 bad request if article id is junk", async () => {
+      const articleId = "badger";
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+        .expect(400);
+
+      expect(body.msg).toBe(badRequestError.msg);
+    });
+    test("get comments returns 404 article not found if article does not exist", async () => {
+      const articleId = 9000;
+      const { body } = await request(app)
+        .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+        .expect(404);
+
+      expect(body.msg).toBe(articleNotFoundError.msg);
     });
   });
   describe("PATCH", () => {
