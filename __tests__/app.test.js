@@ -323,6 +323,16 @@ describe(Endpoints.ARTICLES_END, () => {
       expect(body.articles).toHaveLength(12);
     });
   });
+  describe("get article comments", () => {
+    test("get comments returns comments for given article", async () => {
+      const articleId = 2;
+      const body = await request(app).get(
+        `${Endpoints.ARTICLES_END}/2/comments`
+      );
+
+      console.log(body);
+    });
+  });
   describe("PATCH", () => {
     test("returns with status 200 and an article with incremented votes", async () => {
       const incBy = 123;

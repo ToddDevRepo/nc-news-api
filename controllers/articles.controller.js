@@ -5,6 +5,7 @@ const {
   updateArticleVotes: incrementArticleVotes,
   selectAllArticles,
 } = require("../models/articles.model");
+const { selectArticleComments } = require("../models/comments.model");
 
 module.exports.getArticleById = async (request, response, next) => {
   const { article_id } = request.params;
@@ -37,6 +38,18 @@ module.exports.getArticles = async (request, response, next) => {
     );
     response.send({ articles });
   } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getArticleComments = async (request, response, next) => {
+  console.log("get artcile comments controller");
+  try {
+    const { article_id } = request.params;
+    const { rows: comments } = await selectArticleComments(article_id);
+    response.send({ comments });
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 };
