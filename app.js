@@ -4,6 +4,7 @@ const {
   updateVotesForArticleId: patchArticleById,
   getArticles,
   getArticleComments,
+  addArticleComment,
 } = require("./controllers/articles.controller");
 const { getTopics } = require("./controllers/topics.controller");
 const { badRequestError } = require("./errors");
@@ -15,9 +16,12 @@ app.use(express.json());
 
 app.get(Endpoints.TOPICS_END, getTopics);
 app.get(Endpoints.ARTICLES_END, getArticles);
+
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
-app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
 app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
+
+app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
+app.post(Endpoints.ARTICLE_COMMENTS, addArticleComment);
 
 //// Error Handling ///
 app.use((err, req, res, next) => {

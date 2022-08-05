@@ -14,3 +14,7 @@ module.exports.selectArticleComments = async (articleId) => {
   const { rows: comments } = result[0];
   return comments;
 };
+
+module.exports.insertArticleComment = async (articleId, commentData) => {
+  console.log("comments add comment model");
+};
