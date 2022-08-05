@@ -3,6 +3,7 @@ const {
   getArticleById,
   updateVotesForArticleId: patchArticleById,
   getArticles,
+  getArticleComments,
 } = require("./controllers/articles.controller");
 const { getTopics } = require("./controllers/topics.controller");
 const { badRequestError } = require("./errors");
@@ -15,6 +16,7 @@ app.use(express.json());
 app.get(Endpoints.TOPICS_END, getTopics);
 app.get(Endpoints.ARTICLES_END, getArticles);
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
+app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
 app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
 
 //// Error Handling ///

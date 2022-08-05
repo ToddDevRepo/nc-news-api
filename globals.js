@@ -3,6 +3,7 @@ class Endpoints {
   static TOPICS_END = `${Endpoints.API_END}/topics`;
   static ARTICLES_END = `${Endpoints.API_END}/articles`;
   static ARTICLES_BY_ID_END = `${Endpoints.ARTICLES_END}/:article_id`;
+  static ARTICLE_COMMENTS = `${Endpoints.ARTICLES_BY_ID_END}/comments`;
 }
 
 class QueryTypes {
