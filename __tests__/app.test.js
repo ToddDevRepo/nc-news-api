@@ -454,7 +454,6 @@ describe(Endpoints.ARTICLES_END, () => {
           .send(input)
           .expect(201);
 
-        console.log(body);
         expect(body.comment).toEqual({
           comment_id: 19,
           body: input.body,
@@ -463,6 +462,28 @@ describe(Endpoints.ARTICLES_END, () => {
           article_id: articleId,
           created_at: expect.any(String),
         });
+      });
+      test("return status 422 unprocessable entity if username does not exist in users table", async () => {
+        const articleId = 9;
+        const input = { username: "badger", body: "some body" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(422);
+
+        expect(body.msg).toBe(unprocessableEntity.msg);
+      });
+      test("return status 422 unprocessable entity if article id does not exist", async () => {
+        const articleId = 90000;
+        const input = { username: "rogersop", body: "some body" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(422);
+
+        expect(body.msg).toBe(unprocessableEntity.msg);
       });
     });
   });
