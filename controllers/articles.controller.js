@@ -1,7 +1,9 @@
 const { unprocessableEntity } = require("../errors");
+const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
   selectArticleById,
   updateArticleVotes: incrementArticleVotes,
+  selectAllArticles,
 } = require("../models/articles.model");
 
 module.exports.getArticleById = async (request, response, next) => {
@@ -20,6 +22,20 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
   try {
     const updated = await incrementArticleVotes(article_id, incObj.inc_votes);
     response.send({ updatedArticle: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getArticles = async (request, response, next) => {
+  const { query } = request;
+  try {
+    const articles = await selectAllArticles(
+      query[QueryTypes.topic],
+      query[QueryTypes.sortBy],
+      query[QueryTypes.order]
+    );
+    response.send({ articles });
   } catch (error) {
     next(error);
   }
