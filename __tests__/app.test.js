@@ -324,7 +324,7 @@ describe(Endpoints.ARTICLES_END, () => {
       expect(body.articles).toHaveLength(12);
     });
   });
-  describe("get article comments", () => {
+  describe("GET article comments", () => {
     test("get comments returns comments for given article", async () => {
       const articleId = 9;
       const { body } = await request(app)
@@ -441,6 +441,29 @@ describe(Endpoints.ARTICLES_END, () => {
         .then(({ body }) => {
           expect(body.msg).toEqual(badRequestError.msg);
         });
+    });
+  });
+  describe("POST", () => {
+    describe("Add comment to articlel", () => {
+      test("returns status 201 and the inserted comment.", async () => {
+        const articleId = 9;
+        const input = { username: "rogersop", body: "some body" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(201);
+
+        console.log(body);
+        expect(body.comment).toEqual({
+          comment_id: 19,
+          body: input.body,
+          votes: 0,
+          author: input.username,
+          article_id: articleId,
+          created_at: expect.any(String),
+        });
+      });
     });
   });
 });

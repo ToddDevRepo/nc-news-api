@@ -59,10 +59,9 @@ module.exports.addArticleComment = async (request, response, next) => {
   console.log("post article comment controller");
   const { article_id } = request.params;
   const { body: commentData } = request;
-  console.log(body);
   try {
     const newComment = await insertArticleComment(article_id, commentData);
-    response.status(201).send(newComment);
+    response.status(201).send({ comment: newComment });
   } catch (error) {
     console.log(error);
     next(error);

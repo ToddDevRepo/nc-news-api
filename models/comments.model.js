@@ -1,5 +1,6 @@
+const { Connection } = require("pg");
 const connection = require("../db/connection");
-const { DBTables } = require("../globals");
+const { DBTables, Endpoints } = require("../globals");
 const { selectArticleById } = require("./articles.model");
 
 module.exports.selectArticleComments = async (articleId) => {
@@ -17,4 +18,14 @@ module.exports.selectArticleComments = async (articleId) => {
 
 module.exports.insertArticleComment = async (articleId, commentData) => {
   console.log("comments add comment model");
+  const queryStr = `INSERT INTO ${DBTables.Comments.name} 
+        (${DBTables.Comments.Fields.author}, ${DBTables.Comments.Fields.body}, ${DBTables.Comments.Fields.article_id}) 
+        VALUES 
+        ($1, $2, $3)
+        RETURNING *;`;
+  const sqlArgs = [commentData.username, commentData.body, articleId];
+  const {
+    rows: [comment],
+  } = await connection.query(queryStr, sqlArgs);
+  return comment;
 };
