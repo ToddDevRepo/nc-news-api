@@ -265,7 +265,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("allows search by topic", async () => {
+    test("search by topic returns correct number of articles on given topic", async () => {
       const query = "mitch";
       const { body } = await request(app).get(
         `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`
@@ -274,6 +274,36 @@ describe(Endpoints.ARTICLES_END, () => {
       expect(body.articles).toHaveLength(11);
       body.articles.forEach((article) => {
         expect(article.topic).toBe(query);
+      });
+    });
+    test("search by topic returns articles in descending date order by default", async () => {
+      const query = "mitch";
+      const { body } = await request(app).get(
+        `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`
+      );
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.created_at, {
+        descending: true,
+      });
+    });
+    test("search by topic returns articles in descending votes order when sorted by desc", async () => {
+      const query = "mitch";
+      const { body } = await request(app).get(
+        `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}&${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=desc`
+      );
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.votes, {
+        descending: true,
+      });
+    });
+    test("search by topic returns articles in ascending votes order when sorted by asc", async () => {
+      const query = "mitch";
+      const { body } = await request(app).get(
+        `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}&${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=asc`
+      );
+
+      expect(body.articles).toBeSortedBy(DBTables.Articles.Fields.votes, {
+        descending: false,
       });
     });
     test("non-existent topic returns empty array", async () => {
