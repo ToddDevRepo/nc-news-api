@@ -43,13 +43,11 @@ module.exports.getArticles = async (request, response, next) => {
 };
 
 module.exports.getArticleComments = async (request, response, next) => {
-  console.log("get artcile comments controller");
   const { article_id } = request.params;
   try {
     const comments = await selectArticleComments(article_id);
     response.send({ comments: comments });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
