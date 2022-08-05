@@ -1,5 +1,6 @@
 const { Connection } = require("pg");
 const connection = require("../db/connection");
+const { unprocessableEntity } = require("../errors");
 const { DBTables, Endpoints } = require("../globals");
 const { selectArticleById } = require("./articles.model");
 
@@ -18,6 +19,8 @@ module.exports.selectArticleComments = async (articleId) => {
 
 module.exports.insertArticleComment = async (articleId, commentData) => {
   console.log("comments add comment model");
+  if (!commentData.username || !commentData.body)
+    return Promise.reject(unprocessableEntity);
   const queryStr = `INSERT INTO ${DBTables.Comments.name} 
         (${DBTables.Comments.Fields.author}, ${DBTables.Comments.Fields.body}, ${DBTables.Comments.Fields.article_id}) 
         VALUES 

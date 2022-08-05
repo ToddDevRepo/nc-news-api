@@ -485,6 +485,28 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(unprocessableEntity.msg);
       });
+      test("return status 422 unprocessable entity if body not present", async () => {
+        const articleId = 9;
+        const input = { username: "rogersop" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(422);
+
+        expect(body.msg).toBe(unprocessableEntity.msg);
+      });
+      test("return status 422 unprocessable entity if username not present", async () => {
+        const articleId = 9;
+        const input = { body: "some body" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(422);
+
+        expect(body.msg).toBe(unprocessableEntity.msg);
+      });
     });
   });
 });
