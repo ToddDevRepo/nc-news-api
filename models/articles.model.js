@@ -64,12 +64,10 @@ module.exports.selectAllArticles = async (
   if (!sortBy || !sanitiser.isValidOrder(order))
     return Promise.reject(badQueryError);
   const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
-  console.log(sqlQuery.str);
   const { rows: articles } = await connection.query(
     sqlQuery.str,
     sqlQuery.args
   );
-  console.log(articles);
   return articles;
 };
 function defineGetAllArticlesQuery(topic, sortBy, order) {
