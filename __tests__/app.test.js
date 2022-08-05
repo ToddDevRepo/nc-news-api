@@ -496,6 +496,17 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(unprocessableEntity.msg);
       });
+      test("return status 400 bad request if article id not a number", async () => {
+        const articleId = "badger";
+        const input = { username: "rogersop", body: "some stuff" };
+
+        const { body } = await request(app)
+          .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
+          .send(input)
+          .expect(400);
+
+        expect(body.msg).toBe(badRequestError.msg);
+      });
       test("return status 422 unprocessable entity if username not present", async () => {
         const articleId = 9;
         const input = { body: "some body" };
