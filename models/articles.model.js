@@ -61,8 +61,8 @@ module.exports.selectAllArticles = async (
 ) => {
   const sanitiser = new ArticlesSortBySanitiser();
   sortBy = sanitiser.lookupSortBy(sortBy);
-  if (!sortBy) return Promise.reject(badQueryError);
-  if (!sanitiser.isValidOrder(order)) return Promise.reject(badQueryError);
+  if (!sortBy || !sanitiser.isValidOrder(order))
+    return Promise.reject(badQueryError);
   const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
   console.log(sqlQuery.str);
   const { rows: articles } = await connection.query(

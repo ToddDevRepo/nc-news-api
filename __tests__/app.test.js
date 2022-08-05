@@ -314,7 +314,7 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.articles).toHaveLength(0);
     });
-    test("bad query category is ignored", async () => {
+    test("non-existent category returns articles", async () => {
       const query = "mitch";
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${"; sdhfk"}=${query}`)
