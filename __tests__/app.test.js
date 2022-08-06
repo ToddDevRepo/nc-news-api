@@ -541,6 +541,15 @@ describe(Endpoints.COMMENTS_END, () => {
       commentExists = await commentWithIdExists(commentId);
       expect(commentExists).toBe(false);
     });
+    test("returns bad request if comment id is junk", async () => {
+      const commentId = "badger";
+
+      const { body } = await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(400);
+
+      expect(body.msg).toBe(badRequestError.msg);
+    });
   });
 });
 
