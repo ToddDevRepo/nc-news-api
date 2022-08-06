@@ -521,3 +521,31 @@ describe(Endpoints.ARTICLES_END, () => {
     });
   });
 });
+
+describe(Endpoints.COMMENTS_END, () => {
+  describe("DELETE comment", () => {
+    test("successful delete return status 204 No Content", async () => {
+      const commentId = 1;
+      await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(204);
+    });
+    test("successful delete deletes selected comment", async () => {
+      const commentId = 1;
+      let commentExists = await commentWithIdExists(commentId);
+
+      expect(commentExists).toBe(true);
+
+      await request(app).delete(`${Endpoints.COMMENTS_END}/${commentId}`);
+
+      commentExists = await commentWithIdExists(commentId);
+      expect(commentExists).toBe(false);
+    });
+  });
+});
+
+async function commentWithIdExists(commentId) {
+  const result = await connection.query(`SELECT * FROM ${DBTables.Comments.name}
+  WHERE ${DBTables.Comments.Fields.id} = ${commentId}`);
+  return result.rows.length === 1;
+}

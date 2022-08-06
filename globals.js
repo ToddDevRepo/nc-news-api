@@ -5,7 +5,7 @@ class Endpoints {
   static ARTICLES_BY_ID_END = `${Endpoints.ARTICLES_END}/:article_id`;
   static ARTICLE_COMMENTS = `${Endpoints.ARTICLES_BY_ID_END}/comments`;
   static COMMENTS_END = `${Endpoints.API_END}/comments`;
-  static COMMENTS_BY_ID_END = `${Endpoints.COMMENTS_END}/comment_id`;
+  static COMMENTS_BY_ID_END = `${Endpoints.COMMENTS_END}/:comment_id`;
 }
 
 class QueryTypes {

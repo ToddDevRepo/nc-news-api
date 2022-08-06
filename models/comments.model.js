@@ -33,6 +33,9 @@ module.exports.insertArticleComment = async (articleId, commentData) => {
   return comment;
 };
 
-module.exports.deleteCommentById = (commentId) => {
+module.exports.deleteCommentById = async (commentId) => {
   console.log("Delete comment model");
+  return await connection.query(
+    `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = ${commentId};`
+  );
 };
