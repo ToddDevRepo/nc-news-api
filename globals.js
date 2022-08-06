@@ -8,6 +8,11 @@ class Endpoints {
   static COMMENTS_BY_ID_END = `${Endpoints.COMMENTS_END}/:comment_id`;
 }
 
+class Paths {
+  static PROJECT_ROOT_PATH = __dirname;
+  static ENDPOINTS_PATH = `${Paths.PROJECT_ROOT_PATH}/endpoints.json`;
+}
+
 class QueryTypes {
   static topic = "topic";
   static sortBy = "sort_by";
@@ -42,5 +47,6 @@ class DBTables {
 }
 
 module.exports.Endpoints = Endpoints;
+module.exports.Paths = Paths;
 module.exports.DBTables = DBTables;
 module.exports.QueryTypes = QueryTypes;
