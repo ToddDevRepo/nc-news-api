@@ -11,6 +11,7 @@ const {
   unprocessableEntity,
   topicNotFoundError,
   badQueryError,
+  commentNotFoundError,
 } = require("../errors");
 const { forEach } = require("../db/data/test-data/articles");
 
@@ -549,6 +550,15 @@ describe(Endpoints.COMMENTS_END, () => {
         .expect(400);
 
       expect(body.msg).toBe(badRequestError.msg);
+    });
+    test("returns comment not found if comment id does not exist", async () => {
+      const commentId = 100000;
+
+      const { body } = await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(404);
+
+      expect(body.msg).toBe(commentNotFoundError.msg);
     });
   });
 });

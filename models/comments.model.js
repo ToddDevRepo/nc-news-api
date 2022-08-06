@@ -1,6 +1,6 @@
 const { Connection } = require("pg");
 const connection = require("../db/connection");
-const { unprocessableEntity } = require("../errors");
+const { unprocessableEntity, commentNotFoundError } = require("../errors");
 const { DBTables, Endpoints } = require("../globals");
 const { selectArticleById } = require("./articles.model");
 
@@ -35,8 +35,11 @@ module.exports.insertArticleComment = async (articleId, commentData) => {
 
 module.exports.deleteCommentById = async (commentId) => {
   console.log("Delete comment model");
-  return await connection.query(
+  const dbResponse = await connection.query(
     `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = $1;`,
     [commentId]
   );
+  console.log(dbResponse);
+  if (dbResponse.rowCount === 0) return Promise.reject(commentNotFoundError);
+  return dbResponse;
 };
