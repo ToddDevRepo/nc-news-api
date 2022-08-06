@@ -6,6 +6,7 @@ const {
   getArticleComments,
   addArticleComment,
 } = require("./controllers/articles.controller");
+const { RemoveCommentById } = require("./controllers/comments.controller");
 const { getTopics } = require("./controllers/topics.controller");
 const { badRequestError, unprocessableEntity } = require("./errors");
 const { Endpoints } = require("./globals");
@@ -22,6 +23,8 @@ app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
 
 app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
 app.post(Endpoints.ARTICLE_COMMENTS, addArticleComment);
+
+app.delete(Endpoints.COMMENTS_BY_ID_END, RemoveCommentById);
 
 //// Error Handling ///
 app.use((err, req, res, next) => {

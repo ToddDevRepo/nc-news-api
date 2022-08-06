@@ -32,3 +32,7 @@ module.exports.insertArticleComment = async (articleId, commentData) => {
   );
   return comment;
 };
+
+module.exports.deleteCommentById = (commentId) => {
+  console.log("Delete comment model");
+};
