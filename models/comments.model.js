@@ -34,12 +34,10 @@ module.exports.insertArticleComment = async (articleId, commentData) => {
 };
 
 module.exports.deleteCommentById = async (commentId) => {
-  console.log("Delete comment model");
   const dbResponse = await connection.query(
     `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = $1;`,
     [commentId]
   );
-  console.log(dbResponse);
   if (dbResponse.rowCount === 0) return Promise.reject(commentNotFoundError);
   return dbResponse;
 };
