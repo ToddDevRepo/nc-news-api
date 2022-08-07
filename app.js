@@ -1,4 +1,5 @@
 const express = require("express");
+const { getEndpoints } = require("./controllers/api.controller");
 const {
   getArticleById,
   updateVotesForArticleId: patchArticleById,
@@ -14,6 +15,8 @@ const { Endpoints } = require("./globals");
 const app = express();
 
 app.use(express.json());
+
+app.get(Endpoints.API_END, getEndpoints);
 
 app.get(Endpoints.TOPICS_END, getTopics);
 app.get(Endpoints.ARTICLES_END, getArticles);

@@ -1,9 +1,10 @@
+const fs = require("fs/promises");
 const sorted = require("jest-sorted");
 const request = require("supertest");
 const { app } = require("../app");
 const connection = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const { Endpoints, Query, QueryTypes, DBTables } = require("../globals");
+const { Endpoints, Query, QueryTypes, DBTables, Paths } = require("../globals");
 const testData = require(`../db/data/test-data/index.js`);
 const {
   articleNotFoundError,
@@ -21,6 +22,15 @@ beforeEach(() => {
 
 afterAll(() => {
   return connection.end();
+});
+
+describe(Endpoints.API_END, () => {
+  test("returns status 200 with endpoints as json object", async () => {
+    const json = await fs.readFile(Paths.ENDPOINTS_PATH, "utf-8");
+    const { body } = await request(app).get(Endpoints.API_END).expect(200);
+
+    expect(body).toEqual(JSON.parse(json));
+  });
 });
 
 describe(Endpoints.TOPICS_END, () => {
