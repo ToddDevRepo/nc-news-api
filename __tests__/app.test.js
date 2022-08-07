@@ -11,6 +11,7 @@ const {
   unprocessableEntity,
   topicNotFoundError,
   badQueryError,
+  commentNotFoundError,
 } = require("../errors");
 const { forEach } = require("../db/data/test-data/articles");
 
@@ -521,3 +522,49 @@ describe(Endpoints.ARTICLES_END, () => {
     });
   });
 });
+
+describe(Endpoints.COMMENTS_END, () => {
+  describe("DELETE comment", () => {
+    test("successful delete return status 204 No Content", async () => {
+      const commentId = 1;
+      await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(204);
+    });
+    test("successful delete deletes selected comment", async () => {
+      const commentId = 1;
+      let commentExists = await commentWithIdExists(commentId);
+
+      expect(commentExists).toBe(true);
+
+      await request(app).delete(`${Endpoints.COMMENTS_END}/${commentId}`);
+
+      commentExists = await commentWithIdExists(commentId);
+      expect(commentExists).toBe(false);
+    });
+    test("returns bad request if comment id is junk", async () => {
+      const commentId = "badger";
+
+      const { body } = await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(400);
+
+      expect(body.msg).toBe(badRequestError.msg);
+    });
+    test("returns comment not found if comment id does not exist", async () => {
+      const commentId = 100000;
+
+      const { body } = await request(app)
+        .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
+        .expect(404);
+
+      expect(body.msg).toBe(commentNotFoundError.msg);
+    });
+  });
+});
+
+async function commentWithIdExists(commentId) {
+  const result = await connection.query(`SELECT * FROM ${DBTables.Comments.name}
+  WHERE ${DBTables.Comments.Fields.id} = ${commentId}`);
+  return result.rows.length === 1;
+}
