@@ -31,6 +31,7 @@ class DBTables {
       id: "comment_id",
       author: "author",
       article_id: "article_id",
+      body: "body",
     },
   };
   static Topics = {
