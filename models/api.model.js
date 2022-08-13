@@ -1,7 +1,7 @@
-const fs = require("fs/promises");
 const { Paths } = require("../globals");
+const { JsonFileReader } = require("./support/fs/JsonFileReader");
 
 module.exports.readEndpointsAsync = async () => {
-  const json = await fs.readFile(Paths.ENDPOINTS_PATH, "utf-8");
-  return JSON.parse(json);
+  const jsonReader = new JsonFileReader(Paths.ENDPOINTS_PATH);
+  return await jsonReader.read2ObjectAsync();
 };

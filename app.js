@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  getEndpointsAsync: getEndpoints,
+  getEndpointsAsync: getEndpointsAsync,
 } = require("./controllers/api.controller");
 const {
   getArticleById,
@@ -18,7 +18,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get(Endpoints.API_END, getEndpoints);
+app.get(Endpoints.API_END, getEndpointsAsync);
 
 app.get(Endpoints.TOPICS_END, getTopicsAsync);
 app.get(Endpoints.ARTICLES_END, getArticles);
