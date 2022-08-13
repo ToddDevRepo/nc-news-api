@@ -1,6 +1,7 @@
 const connection = require("../db/connection");
-const { DBTables } = require("../globals");
+const { TopicsTable } = require("./support/sql/TopicsTable");
 
 module.exports.selectAllTopics = () => {
-  return connection.query(`SELECT * FROM ${DBTables.Topics.name};`);
+  const topicsTable = new TopicsTable(connection);
+  return topicsTable.selectAll();
 };
