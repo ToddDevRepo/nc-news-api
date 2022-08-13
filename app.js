@@ -8,7 +8,7 @@ const {
   addArticleComment,
 } = require("./controllers/articles.controller");
 const { RemoveCommentById } = require("./controllers/comments.controller");
-const { getTopics } = require("./controllers/topics.controller");
+const { getTopicsAsync } = require("./controllers/topics.controller");
 const { badRequestError, unprocessableEntity } = require("./errors");
 const { Endpoints } = require("./globals");
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.get(Endpoints.API_END, getEndpoints);
 
-app.get(Endpoints.TOPICS_END, getTopics);
+app.get(Endpoints.TOPICS_END, getTopicsAsync);
 app.get(Endpoints.ARTICLES_END, getArticles);
 
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);

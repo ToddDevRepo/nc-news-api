@@ -1,7 +1,9 @@
 const { response } = require("express");
-const { selectAllTopics } = require("../models/topics.model");
+const {
+  selectAllTopicsAsync: selectAllTopicsAsync,
+} = require("../models/topics.model");
 
-module.exports.getTopics = async (request, response) => {
-  const topics = await selectAllTopics();
+module.exports.getTopicsAsync = async (request, response) => {
+  const topics = await selectAllTopicsAsync();
   response.send({ topics });
 };
