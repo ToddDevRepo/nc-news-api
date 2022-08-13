@@ -1,7 +1,7 @@
 const connection = require("../db/connection");
 const { TopicsTable } = require("./support/sql/TopicsTable");
 
-module.exports.selectAllTopics = () => {
+module.exports.selectAllTopics = async () => {
   const topicsTable = new TopicsTable(connection);
-  return topicsTable.selectAll();
+  return await topicsTable.selectAllRowsAsync();
 };

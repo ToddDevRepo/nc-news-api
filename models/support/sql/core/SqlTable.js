@@ -18,6 +18,15 @@ class SqlTable {
   selectAll() {
     return this.#_db.query(`SELECT * FROM ${this.tableName};`);
   }
+
+  async selectAllAsync() {
+    return await this.selectAll();
+  }
+
+  async selectAllRowsAsync() {
+    const { rows } = await this.selectAllAsync();
+    return rows;
+  }
 }
 
 module.exports.SqlTable = SqlTable;
