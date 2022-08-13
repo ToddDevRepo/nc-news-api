@@ -1,5 +1,7 @@
 const express = require("express");
-const { getEndpoints } = require("./controllers/api.controller");
+const {
+  getEndpointsAsync: getEndpoints,
+} = require("./controllers/api.controller");
 const {
   getArticleById,
   updateVotesForArticleId: patchArticleById,

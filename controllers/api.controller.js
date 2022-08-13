@@ -1,9 +1,11 @@
 const { json } = require("express");
-const { readEndpoints } = require("../models/api.model");
+const {
+  readEndpointsAsync: readEndpointsAsync,
+} = require("../models/api.model");
 
-module.exports.getEndpoints = async (request, response, next) => {
+module.exports.getEndpointsAsync = async (request, response, next) => {
   try {
-    const json = await readEndpoints();
+    const json = await readEndpointsAsync();
     response.send(json);
   } catch (error) {
     next(error);
