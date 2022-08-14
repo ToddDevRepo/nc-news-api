@@ -10,7 +10,7 @@ const {
   insertArticleComment,
 } = require("../models/comments.model");
 
-module.exports.getArticleById = async (request, response, next) => {
+module.exports.getArticleByIdAsync = async (request, response, next) => {
   const { article_id } = request.params;
   try {
     const article = await selectArticleById(article_id);

@@ -3,7 +3,7 @@ const {
   getEndpointsAsync: getEndpointsAsync,
 } = require("./controllers/api.controller");
 const {
-  getArticleById,
+  getArticleByIdAsync: getArticleByIdAsync,
   updateVotesForArticleId: patchArticleById,
   getArticles,
   getArticleComments,
@@ -23,7 +23,7 @@ app.get(Endpoints.API_END, getEndpointsAsync);
 app.get(Endpoints.TOPICS_END, getTopicsAsync);
 app.get(Endpoints.ARTICLES_END, getArticles);
 
-app.get(Endpoints.ARTICLES_BY_ID_END, getArticleById);
+app.get(Endpoints.ARTICLES_BY_ID_END, getArticleByIdAsync);
 app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
 
 app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
