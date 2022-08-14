@@ -2,7 +2,9 @@ const { Connection } = require("pg");
 const connection = require("../db/connection");
 const { unprocessableEntity, commentNotFoundError } = require("../errors");
 const { DBTables, Endpoints } = require("../globals");
-const { selectArticleById } = require("./articles.model");
+const {
+  selectArticleByIdAsync: selectArticleById,
+} = require("./articles.model");
 
 module.exports.selectArticleComments = async (articleId) => {
   const articleExistsPending = selectArticleById(articleId);

@@ -23,7 +23,7 @@ const {
 
 const gCommentCountField = "comment_count";
 
-module.exports.selectArticleById = async (articleId) => {
+module.exports.selectArticleByIdAsync = async (articleId) => {
   const {
     rows: [article],
   } = await connection.query(

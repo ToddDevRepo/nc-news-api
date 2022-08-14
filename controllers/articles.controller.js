@@ -1,7 +1,7 @@
 const { unprocessableEntity } = require("../errors");
 const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
-  selectArticleById,
+  selectArticleByIdAsync: selectArticleByIdAsync,
   updateArticleVotes: incrementArticleVotes,
   selectAllArticles,
 } = require("../models/articles.model");
@@ -13,7 +13,7 @@ const {
 module.exports.getArticleByIdAsync = async (request, response, next) => {
   const { article_id } = request.params;
   try {
-    const article = await selectArticleById(article_id);
+    const article = await selectArticleByIdAsync(article_id);
     response.send({ article });
   } catch (error) {
     next(error);
