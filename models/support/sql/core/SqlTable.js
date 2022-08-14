@@ -15,8 +15,25 @@ class SqlTable {
     return this.#_config.fields;
   }
 
+  query(sql) {
+    return this.#_db.query(sql);
+  }
+
+  async queryAsync(sql) {
+    return await this.query(sql);
+  }
+
+  async queryForRowsAsync(sql) {
+    const { rows } = await this.queryAsync(sql);
+  }
+
+  async queryForItemAsync(sql) {
+    const [item] = await this.queryForRowsAsync(sql);
+    return item;
+  }
+
   selectAll() {
-    return this.#_db.query(`SELECT * FROM ${this.tableName};`);
+    return this.query(`SELECT * FROM ${this.tableName};`);
   }
 
   async selectAllAsync() {
