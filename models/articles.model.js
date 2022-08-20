@@ -11,6 +11,8 @@ const {
   ArticlesSortBySanitiser,
 } = require("./support/articles-sort-by-sanitiser");
 const { SqlSanitiser, SortBySanitiser } = require("./support/sql-sanitiser");
+const { ArticlesTable } = require("./support/sql/ArticlesTable");
+const { CommentsTable } = require("./support/sql/CommentsTable");
 const {
   prefixedArticlesId,
   prefixedArticlesTitle,
@@ -24,15 +26,11 @@ const {
 const gCommentCountField = "comment_count";
 
 module.exports.selectArticleByIdAsync = async (articleId) => {
-  const {
-    rows: [article],
-  } = await connection.query(
-    `SELECT ${DBTables.Articles.name}.*, COUNT(${DBTables.Comments.Fields.id}) AS ${gCommentCountField}
-FROM ${DBTables.Articles.name}
-RIGHT JOIN ${DBTables.Comments.name} ON ${DBTables.Comments.name}.${DBTables.Comments.Fields.author} = ${DBTables.Articles.name}.${DBTables.Articles.Fields.author}
-WHERE ${DBTables.Articles.name}.${DBTables.Articles.Fields.id} = $1
-GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
-    [articleId]
+  const commentsTable = new CommentsTable(connection);
+  const articlesTable = new ArticlesTable(connection);
+  const article = await articlesTable.getArticleByIdWithCommentCountAsync(
+    articleId,
+    commentsTable
   );
 
   if (!article) return Promise.reject(articleNotFoundError);

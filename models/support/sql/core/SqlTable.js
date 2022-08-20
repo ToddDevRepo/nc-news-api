@@ -1,10 +1,14 @@
+const { PrefixedField } = require("./PrefixedField");
+
 class SqlTable {
   #_db;
   #_config;
+  #_prefixed;
 
   constructor(db, config) {
     this.#_config = config;
     this.#_db = db;
+    this.#_prefixed = new PrefixedField(this.tableName, this.fields);
   }
 
   get tableName() {
@@ -15,20 +19,25 @@ class SqlTable {
     return this.#_config.fields;
   }
 
-  query(sql) {
-    return this.#_db.query(sql);
+  get prefixedField() {
+    return this.#_prefixed;
   }
 
-  async queryAsync(sql) {
-    return await this.query(sql);
+  query(sql, params) {
+    return this.#_db.query(sql, params);
   }
 
-  async queryForRowsAsync(sql) {
-    const { rows } = await this.queryAsync(sql);
+  async queryAsync(sql, params) {
+    return await this.query(sql, params);
   }
 
-  async queryForItemAsync(sql) {
-    const [item] = await this.queryForRowsAsync(sql);
+  async queryForRowsAsync(sql, params) {
+    const { rows } = await this.queryAsync(sql, params);
+    return rows;
+  }
+
+  async queryForItemAsync(sql, params) {
+    const [item] = await this.queryForRowsAsync(sql, params);
     return item;
   }
 
