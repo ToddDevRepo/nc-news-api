@@ -24,16 +24,16 @@ const {
 const gCommentCountField = "comment_count";
 
 module.exports.selectArticleById = async (articleId) => {
+  const sql = `SELECT ${DBTables.Articles.name}.*, 
+    COUNT(${DBTables.Comments.Fields.id}) AS ${gCommentCountField}
+FROM ${DBTables.Articles.name}
+LEFT JOIN ${DBTables.Comments.name} 
+ON ${DBTables.Articles.name}.${DBTables.Articles.Fields.id} = ${DBTables.Comments.name}.${DBTables.Comments.Fields.article_id}
+WHERE ${DBTables.Articles.name}.${DBTables.Articles.Fields.id} = $1
+GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`;
   const {
     rows: [article],
-  } = await connection.query(
-    `SELECT ${DBTables.Articles.name}.*, COUNT(${DBTables.Comments.Fields.id}) AS ${gCommentCountField}
-FROM ${DBTables.Articles.name}
-RIGHT JOIN ${DBTables.Comments.name} ON ${DBTables.Comments.name}.${DBTables.Comments.Fields.author} = ${DBTables.Articles.name}.${DBTables.Articles.Fields.author}
-WHERE ${DBTables.Articles.name}.${DBTables.Articles.Fields.id} = $1
-GROUP BY ${DBTables.Articles.name}.${DBTables.Articles.Fields.id};`,
-    [articleId]
-  );
+  } = await connection.query(sql, [articleId]);
 
   if (!article) return Promise.reject(articleNotFoundError);
   article[gCommentCountField] = parseInt(article[gCommentCountField]);
