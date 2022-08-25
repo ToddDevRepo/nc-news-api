@@ -9,6 +9,7 @@ class ArticlesSortBySanitiser extends SortBySanitiser {
       title: DBTables.Articles.Fields.title,
       topic: DBTables.Articles.Fields.topic,
       votes: DBTables.Articles.Fields.votes,
+      comment_count: "comment_count",
     });
   }
 }
