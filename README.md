@@ -2,38 +2,46 @@
 
 ## Summary
 
-A sample application and api for users to post articles and comment on articles posted by other users.
+Back-end for the sample Northcoders News aggregation, web content rating, and discussion website. You can find a working version of the whole application here:
 
-## Hosted Version
+https://fe-nc-news-app.herokuapp.com/
 
-You can find a live version of the application here:
+## Hosted backend
+
+You can find a live version of the application backend here:
+
 https://nc-news-api-live.herokuapp.com/api
 
 ## Pre-requisites:
 
 - Node.js v18.4.0 or higher.
 - Postgresqul version 12.11 or higher.
+- Git installed on your computer.
 
 ## Setup
 
 ### Cloning
 
 You can find the project at the following link:
+
 https://github.com/ToddDevRepo/nc-news-api
 
 To clone the project:
 
-1. Make sure you have Git installed.
-2. Use your command line to navigate to the directory in which you wish to clone the project.
-3. Clone the repository by typing:
+1. Use your command line to navigate to the directory in which you wish to clone the project.
 
-$ git clone https://github.com/ToddDevRepo/nc-news-api.git
+2) Go to the above backend GitHub repository and fork a copy of the project.
+3) On your forked copy, click Code and copy the http clone link
+
+4. Clone the repository by typing:
+
+$ git clone <your clone link>
 
 ### Install Dependencies
 
 Once you have cloned the project, you should use the Node Package Manager to install the project dependencies. Type:
 
-$ npm init
+$ npm install
 
 ### Connect to your Local Postgres Database
 
