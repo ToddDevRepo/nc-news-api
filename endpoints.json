@@ -18,8 +18,9 @@
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "comment_count": 5,
+          "votes": 3
         }
       ]
     }
