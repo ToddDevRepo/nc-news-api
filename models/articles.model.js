@@ -26,10 +26,11 @@ const {
 
 const gCommentCountField = "comment_count";
 
+const gArticlesTable = new ArticlesTable(gSqlQueryHelper);
+
 module.exports.selectArticleByIdAsync = async (articleId) => {
   const commentsTable = new CommentsTable(gSqlQueryHelper);
-  const articlesTable = new ArticlesTable(gSqlQueryHelper);
-  const article = await articlesTable.getArticleByIdWithCommentCountAsync(
+  const article = await gArticlesTable.getArticleByIdWithCommentCountAsync(
     articleId,
     commentsTable
   );
