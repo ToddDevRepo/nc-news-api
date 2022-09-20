@@ -27,7 +27,6 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
     const updated = await updateArticleVotesAsync(article_id, incObj.inc_votes);
     response.send({ updatedArticle: updated });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

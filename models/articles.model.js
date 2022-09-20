@@ -41,16 +41,13 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
 
 module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
   if (isNaN(incVotes)) return Promise.reject(unprocessableEntity);
-  const {
-    rows: [result],
-  } = await connection.query(
-    `UPDATE ${DBTables.Articles.name}
-    SET ${DBTables.Articles.Fields.votes} = votes + $1
-    WHERE ${DBTables.Articles.Fields.id} = $2 RETURNING *;`,
-    [incVotes, article_id]
+  const updated = await gArticlesTable.updateArticleVotesAsync(
+    article_id,
+    incVotes
   );
-  if (!result) return Promise.reject(articleNotFoundError);
-  return result;
+
+  if (!updated) return Promise.reject(articleNotFoundError);
+  return updated;
 };
 
 module.exports.selectAllArticles = async (

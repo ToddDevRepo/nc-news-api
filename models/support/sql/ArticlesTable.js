@@ -23,6 +23,15 @@ GROUP BY ${this.prefixedField.id};`,
       [id]
     );
   }
+
+  async updateArticleVotesAsync(articleId, incVotes) {
+    return await this.#_queryable.queryForItemAsync(
+      `UPDATE ${this.tableName}
+    SET ${this.fields.votes} = votes + $1
+    WHERE ${this.fields.id} = $2 RETURNING *;`,
+      [incVotes, articleId]
+    );
+  }
 }
 
 module.exports.ArticlesTable = ArticlesTable;
