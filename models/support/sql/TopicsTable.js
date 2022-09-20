@@ -1,10 +1,17 @@
 const { DBTables } = require("../../../globals");
 const { SqlConfig } = require("./core/SqlConfig");
-const { SqlTable } = require("./core/SqlTable");
+const { SqlTableDefs } = require("./core/SqlTableDefs");
 
-class TopicsTable extends SqlTable {
-  constructor(db) {
-    super(db, new SqlConfig(DBTables.Topics.name));
+class TopicsTable extends SqlTableDefs {
+  #_queryable;
+
+  constructor(queryable) {
+    super(new SqlConfig(DBTables.Topics.name, DBTables.Topics.Fields));
+    this.#_queryable = queryable;
+  }
+
+  async selectAllTopicsAsync() {
+    return await this.#_queryable.selectAllRowsAsync(this.tableName);
   }
 }
 

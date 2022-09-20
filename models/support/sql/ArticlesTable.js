@@ -1,15 +1,18 @@
 const { DBTables } = require("../../../globals");
 const { SqlConfig } = require("./core/SqlConfig");
-const { SqlTable } = require("./core/SqlTable");
+const { SqlTableDefs } = require("./core/SqlTableDefs");
 
-class ArticlesTable extends SqlTable {
-  constructor(db) {
-    super(db, new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
+class ArticlesTable extends SqlTableDefs {
+  #_queryable;
+
+  constructor(queryable) {
+    super(new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
+    this.#_queryable = queryable;
   }
 
   async getArticleByIdWithCommentCountAsync(id, commentsTable) {
     const commentCountField = "comment_count";
-    return await this.queryForItemAsync(
+    return await this.#_queryable.queryForItemAsync(
       `SELECT ${this.prefixedField.all}, 
       COUNT(${commentsTable.fields.id}) AS ${commentCountField}
 FROM ${this.tableName}

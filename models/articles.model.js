@@ -13,6 +13,7 @@ const {
 const { SqlSanitiser, SortBySanitiser } = require("./support/sql-sanitiser");
 const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
+const { gSqlQueryHelper } = require("./support/sql/sql-utils");
 const {
   prefixedArticlesId,
   prefixedArticlesTitle,
@@ -26,8 +27,8 @@ const {
 const gCommentCountField = "comment_count";
 
 module.exports.selectArticleByIdAsync = async (articleId) => {
-  const commentsTable = new CommentsTable(connection);
-  const articlesTable = new ArticlesTable(connection);
+  const commentsTable = new CommentsTable(gSqlQueryHelper);
+  const articlesTable = new ArticlesTable(gSqlQueryHelper);
   const article = await articlesTable.getArticleByIdWithCommentCountAsync(
     articleId,
     commentsTable
