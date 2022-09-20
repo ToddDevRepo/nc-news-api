@@ -13,8 +13,8 @@ class ArticlesTable extends SqlTable {
       `SELECT ${this.prefixedField.all}, 
       COUNT(${commentsTable.fields.id}) AS ${commentCountField}
 FROM ${this.tableName}
-RIGHT JOIN ${commentsTable.tableName}
-ON ${commentsTable.prefixedField.author}=${this.prefixedField.author}
+LEFT JOIN ${commentsTable.tableName}
+ON ${this.prefixedField.id}=${commentsTable.prefixedField.article_id}
 WHERE ${this.prefixedField.id} = $1
 GROUP BY ${this.prefixedField.id};`,
       [id]
