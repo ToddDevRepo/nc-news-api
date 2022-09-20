@@ -81,9 +81,16 @@ describe(Endpoints.ARTICLES_END, () => {
               body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
               created_at: "2020-10-16T05:03:00.000Z",
               votes: 0,
-              comment_count: 13,
+              comment_count: 0,
             },
           });
+        });
+    });
+    test("article has correct comment count", () => {
+      return request(app)
+        .get(`${Endpoints.ARTICLES_END}/1`)
+        .then(({ body }) => {
+          expect(body.article.comment_count).toBe(11);
         });
     });
     test("path with valid but non-existent id returns 404 not found", () => {
