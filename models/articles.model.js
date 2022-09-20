@@ -39,7 +39,7 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
   return article;
 };
 
-module.exports.updateArticleVotes = async (article_id, incVotes) => {
+module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
   if (isNaN(incVotes)) return Promise.reject(unprocessableEntity);
   const {
     rows: [result],

@@ -2,8 +2,8 @@ const { unprocessableEntity } = require("../errors");
 const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
   selectArticleByIdAsync: selectArticleByIdAsync,
-  updateArticleVotes: incrementArticleVotes,
   selectAllArticles,
+  updateArticleVotesAsync,
 } = require("../models/articles.model");
 const {
   selectArticleComments,
@@ -24,9 +24,10 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
   const { article_id } = request.params;
   const { body: incObj } = request;
   try {
-    const updated = await incrementArticleVotes(article_id, incObj.inc_votes);
+    const updated = await updateArticleVotesAsync(article_id, incObj.inc_votes);
     response.send({ updatedArticle: updated });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
