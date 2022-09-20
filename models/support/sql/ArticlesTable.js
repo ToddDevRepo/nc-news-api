@@ -14,7 +14,7 @@ class ArticlesTable extends SqlTableDefs {
     const commentCountField = "comment_count";
     return await this.#_queryable.queryForItemAsync(
       `SELECT ${this.prefixedField.all}, 
-      COUNT(${commentsTable.fields.id}) AS ${commentCountField}
+      COUNT(${commentsTable.fields.id})::INTEGER AS ${commentCountField}
 FROM ${this.tableName}
 LEFT JOIN ${commentsTable.tableName}
 ON ${this.prefixedField.id}=${commentsTable.prefixedField.article_id}

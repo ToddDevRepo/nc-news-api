@@ -35,7 +35,6 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
   );
 
   if (!article) return Promise.reject(articleNotFoundError);
-  article[gCommentCountField] = parseInt(article[gCommentCountField]);
   return article;
 };
 
