@@ -1,14 +1,28 @@
 const { DBTables, QueryTypes } = require("../../../globals");
+const { SortBySanitiser } = require("../sql-sanitiser");
 const { SqlConfig } = require("./core/SqlConfig");
 const { SqlTableDefs } = require("./core/SqlTableDefs");
 
 class ArticlesTable extends SqlTableDefs {
   #_commentCountField = "comment_count";
   #_queryable;
+  #_sortBySanitizer;
 
   constructor(queryable) {
     super(new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
     this.#_queryable = queryable;
+    this.#_sortBySanitizer = new SortBySanitiser({
+      date: this.fields.created_at,
+      author: this.fields.author,
+      title: this.fields.title,
+      topic: this.fields.topic,
+      votes: this.fields.votes,
+      comment_count: this.#_commentCountField,
+    });
+  }
+
+  get sortSanitizer() {
+    return this.#_sortBySanitizer;
   }
 
   async getArticleByIdWithCommentCountAsync(id, commentsTable) {

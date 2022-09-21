@@ -7,10 +7,6 @@ const {
   badQueryError,
 } = require("../errors");
 const { DBTables, QueryTypes } = require("../globals");
-const {
-  ArticlesSortBySanitiser,
-} = require("./support/articles-sort-by-sanitiser");
-const { SqlSanitiser, SortBySanitiser } = require("./support/sql-sanitiser");
 const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
 const { gSqlQueryHelper } = require("./support/sql/sql-utils");
@@ -55,9 +51,8 @@ module.exports.selectAllArticlesAsync = async (
   sortBy = "date",
   order = "desc"
 ) => {
-  const sanitiser = new ArticlesSortBySanitiser();
-  sortBy = sanitiser.lookupSortBy(sortBy);
-  if (!sortBy || !sanitiser.isValidOrder(order))
+  sortBy = gArticlesTable.sortSanitizer.lookupSortBy(sortBy);
+  if (!sortBy || !gArticlesTable.sortSanitizer.isValidOrder(order))
     return Promise.reject(badQueryError);
   const commentsTable = new CommentsTable(gSqlQueryHelper);
   const articles = await gArticlesTable.selectSortedArticlesByFilterAsync(
