@@ -6,7 +6,6 @@ const {
   topicNotFoundError,
   badQueryError,
 } = require("../errors");
-const { DBTables, QueryTypes } = require("../globals");
 const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
 const { gSqlQueryHelper } = require("./support/sql/sql-utils");
