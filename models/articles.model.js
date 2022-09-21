@@ -10,15 +10,6 @@ const { DBTables, QueryTypes } = require("../globals");
 const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
 const { gSqlQueryHelper } = require("./support/sql/sql-utils");
-const {
-  prefixedArticlesId,
-  prefixedArticlesTitle,
-  prefixedArticlesTopic,
-  prefixedArticlesAuthor,
-  prefixedArticlesCreatedAt,
-  prefixedArticlesVotes,
-  prefixedCommentsArticleId,
-} = require("./support/utils");
 
 const gArticlesTable = new ArticlesTable(gSqlQueryHelper);
 
