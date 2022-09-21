@@ -20,8 +20,6 @@ const {
   prefixedCommentsArticleId,
 } = require("./support/utils");
 
-const gCommentCountField = "comment_count";
-
 const gArticlesTable = new ArticlesTable(gSqlQueryHelper);
 
 module.exports.selectArticleByIdAsync = async (articleId) => {
