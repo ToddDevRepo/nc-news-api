@@ -50,7 +50,7 @@ module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
   return updated;
 };
 
-module.exports.selectAllArticles = async (
+module.exports.selectAllArticlesAsync = async (
   topic,
   sortBy = "date",
   order = "desc"
@@ -59,32 +59,12 @@ module.exports.selectAllArticles = async (
   sortBy = sanitiser.lookupSortBy(sortBy);
   if (!sortBy || !sanitiser.isValidOrder(order))
     return Promise.reject(badQueryError);
-  const sqlQuery = defineGetAllArticlesQuery(topic, sortBy, order);
-  const { rows: articles } = await connection.query(
-    sqlQuery.str,
-    sqlQuery.args
+  const commentsTable = new CommentsTable(gSqlQueryHelper);
+  const articles = await gArticlesTable.selectSortedArticlesByFilterAsync(
+    topic,
+    sortBy,
+    order,
+    commentsTable
   );
   return articles;
 };
-function defineGetAllArticlesQuery(topic, sortBy, order) {
-  const queryArgs = [];
-  let queryStr = `SELECT ${prefixedArticlesId()},
-      ${prefixedArticlesTitle()},
-      ${prefixedArticlesTopic()},
-      ${prefixedArticlesAuthor()},
-      ${prefixedArticlesCreatedAt()},
-       ${prefixedArticlesVotes()},
-       CAST(COUNT(${
-         DBTables.Comments.Fields.id
-       }) AS INT) AS ${gCommentCountField}
-    FROM ${DBTables.Articles.name}
-    LEFT JOIN ${prefixedCommentsArticleId()} = ${prefixedArticlesId()}`;
-  if (topic) {
-    queryStr += ` WHERE ${QueryTypes.topic} = $1`;
-    queryArgs.push(topic);
-  }
-  queryStr += ` GROUP BY ${prefixedArticlesId()}`;
-  if (sortBy && order) queryStr += ` ORDER BY ${sortBy} ${order}`;
-  queryStr += ";";
-  return { str: queryStr, args: queryArgs };
-}

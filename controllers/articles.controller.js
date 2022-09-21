@@ -2,7 +2,7 @@ const { unprocessableEntity } = require("../errors");
 const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
   selectArticleByIdAsync: selectArticleByIdAsync,
-  selectAllArticles,
+  selectAllArticlesAsync,
   updateArticleVotesAsync,
 } = require("../models/articles.model");
 const {
@@ -34,13 +34,14 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
 module.exports.getArticles = async (request, response, next) => {
   const { query } = request;
   try {
-    const articles = await selectAllArticles(
+    const articles = await selectAllArticlesAsync(
       query[QueryTypes.topic],
       query[QueryTypes.sortBy],
       query[QueryTypes.order]
     );
     response.send({ articles });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
