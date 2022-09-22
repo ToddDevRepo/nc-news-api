@@ -41,7 +41,6 @@ module.exports.getArticles = async (request, response, next) => {
     );
     response.send({ articles });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -52,7 +51,6 @@ module.exports.getArticleComments = async (request, response, next) => {
     const comments = await selectCommentsForArticleAsync(article_id);
     response.send({ comments: comments });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
