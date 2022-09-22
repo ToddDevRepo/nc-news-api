@@ -20,7 +20,11 @@ module.exports.getArticleByIdAsync = async (request, response, next) => {
   }
 };
 
-module.exports.updateVotesForArticleId = async (request, response, next) => {
+module.exports.updateVotesForArticleIdAsync = async (
+  request,
+  response,
+  next
+) => {
   const { article_id } = request.params;
   const { body: incObj } = request;
   try {
@@ -31,7 +35,7 @@ module.exports.updateVotesForArticleId = async (request, response, next) => {
   }
 };
 
-module.exports.getArticles = async (request, response, next) => {
+module.exports.getArticlesAsync = async (request, response, next) => {
   const { query } = request;
   try {
     const articles = await selectAllArticlesAsync(
@@ -45,7 +49,7 @@ module.exports.getArticles = async (request, response, next) => {
   }
 };
 
-module.exports.getArticleComments = async (request, response, next) => {
+module.exports.getArticleCommentsAsync = async (request, response, next) => {
   const { article_id } = request.params;
   try {
     const comments = await selectCommentsForArticleAsync(article_id);
@@ -55,7 +59,7 @@ module.exports.getArticleComments = async (request, response, next) => {
   }
 };
 
-module.exports.addArticleComment = async (request, response, next) => {
+module.exports.addArticleCommentAsync = async (request, response, next) => {
   const { article_id } = request.params;
   const { body: commentData } = request;
   try {

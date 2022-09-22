@@ -5,10 +5,10 @@ const {
 } = require("./controllers/api.controller");
 const {
   getArticleByIdAsync: getArticleByIdAsync,
-  updateVotesForArticleId: patchArticleById,
-  getArticles,
-  getArticleComments,
-  addArticleComment,
+  updateVotesForArticleIdAsync,
+  getArticlesAsync,
+  getArticleCommentsAsync,
+  addArticleCommentAsync,
 } = require("./controllers/articles.controller");
 const { RemoveCommentById } = require("./controllers/comments.controller");
 const { getTopicsAsync } = require("./controllers/topics.controller");
@@ -23,13 +23,13 @@ app.use(express.json());
 app.get(Endpoints.API_END, getEndpointsAsync);
 
 app.get(Endpoints.TOPICS_END, getTopicsAsync);
-app.get(Endpoints.ARTICLES_END, getArticles);
+app.get(Endpoints.ARTICLES_END, getArticlesAsync);
 
 app.get(Endpoints.ARTICLES_BY_ID_END, getArticleByIdAsync);
-app.patch(Endpoints.ARTICLES_BY_ID_END, patchArticleById);
+app.patch(Endpoints.ARTICLES_BY_ID_END, updateVotesForArticleIdAsync);
 
-app.get(Endpoints.ARTICLE_COMMENTS, getArticleComments);
-app.post(Endpoints.ARTICLE_COMMENTS, addArticleComment);
+app.get(Endpoints.ARTICLE_COMMENTS, getArticleCommentsAsync);
+app.post(Endpoints.ARTICLE_COMMENTS, addArticleCommentAsync);
 
 app.delete(Endpoints.COMMENTS_BY_ID_END, RemoveCommentById);
 
