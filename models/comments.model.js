@@ -25,7 +25,7 @@ module.exports.selectCommentsForArticleAsync = async (articleId) => {
   return comments;
 };
 
-module.exports.insertArticleComment = async (articleId, commentData) => {
+module.exports.insertArticleCommentAsync = async (articleId, commentData) => {
   if (!commentData.username || !commentData.body)
     return Promise.reject(unprocessableEntity);
   const comment = await gCommentsTable.insertCommentForArticle(

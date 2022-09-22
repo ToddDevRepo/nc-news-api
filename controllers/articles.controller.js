@@ -6,7 +6,7 @@ const {
   updateArticleVotesAsync,
 } = require("../models/articles.model");
 const {
-  insertArticleComment,
+  insertArticleCommentAsync,
   selectCommentsForArticleAsync,
 } = require("../models/comments.model");
 
@@ -63,7 +63,7 @@ module.exports.addArticleCommentAsync = async (request, response, next) => {
   const { article_id } = request.params;
   const { body: commentData } = request;
   try {
-    const newComment = await insertArticleComment(article_id, commentData);
+    const newComment = await insertArticleCommentAsync(article_id, commentData);
     response.status(201).send({ comment: newComment });
   } catch (error) {
     next(error);
