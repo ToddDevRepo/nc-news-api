@@ -17,6 +17,14 @@ class CommentsTable extends SqlTableDefs {
       articleId
     );
   }
+
+  async insertCommentForArticle(articleId, commentData) {
+    return await this.#_queryable.insertColumnValues(
+      this.tableName,
+      [this.fields.author, this.fields.body, this.fields.article_id],
+      [commentData.username, commentData.body, articleId]
+    );
+  }
 }
 
 module.exports.CommentsTable = CommentsTable;

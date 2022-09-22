@@ -19,6 +19,16 @@ class SqlQueryHelper {
     return item;
   }
 
+  async insertColumnValues(table, columns, values) {
+    const colsStr = columns.join(", ");
+    const valsStr = values.map((val, idx) => `$${idx + 1}`).join(", ");
+    const inserted = await this.queryForItemAsync(
+      `INSERT INTO ${table} (${colsStr}) VALUES (${valsStr}) RETURNING *;`,
+      values
+    );
+    return inserted;
+  }
+
   async selectAllRowsAsync(tableName) {
     const rows = this.queryForRowsAsync(`SELECT * FROM ${tableName};`);
     return rows;

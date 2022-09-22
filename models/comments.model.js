@@ -10,11 +10,12 @@ const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
 const { gSqlQueryHelper } = require("./support/sql/sql-utils");
 
+const gCommentsTable = new CommentsTable(gSqlQueryHelper);
+
 module.exports.selectCommentsForArticleAsync = async (articleId) => {
   const articleExistsPending = selectArticleByIdAsync(articleId);
-  const commentsTable = new CommentsTable(gSqlQueryHelper);
   const selectCommentsPending =
-    commentsTable.selectCommentsByArticleId(articleId);
+    gCommentsTable.selectCommentsByArticleId(articleId);
 
   const result = await Promise.all([
     selectCommentsPending,
@@ -27,15 +28,9 @@ module.exports.selectCommentsForArticleAsync = async (articleId) => {
 module.exports.insertArticleComment = async (articleId, commentData) => {
   if (!commentData.username || !commentData.body)
     return Promise.reject(unprocessableEntity);
-  const {
-    rows: [comment],
-  } = await connection.query(
-    `INSERT INTO ${DBTables.Comments.name} 
-        (${DBTables.Comments.Fields.author}, ${DBTables.Comments.Fields.body}, ${DBTables.Comments.Fields.article_id}) 
-        VALUES 
-        ($1, $2, $3)
-        RETURNING *;`,
-    [commentData.username, commentData.body, articleId]
+  const comment = await gCommentsTable.insertCommentForArticle(
+    articleId,
+    commentData
   );
   return comment;
 };
