@@ -1,4 +1,3 @@
-const connection = require("../db/connection");
 const {
   articleNotFoundError,
   badRequestError,
