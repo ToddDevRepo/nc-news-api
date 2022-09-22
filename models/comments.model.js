@@ -6,7 +6,7 @@ const {
   selectArticleByIdAsync: selectArticleById,
 } = require("./articles.model");
 
-module.exports.selectArticleComments = async (articleId) => {
+module.exports.selectCommentsForArticleAsync = async (articleId) => {
   const articleExistsPending = selectArticleById(articleId);
   const getCommentsPending = connection.query(
     `SELECT *
