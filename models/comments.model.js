@@ -35,7 +35,7 @@ module.exports.insertArticleCommentAsync = async (articleId, commentData) => {
   return comment;
 };
 
-module.exports.deleteCommentById = async (commentId) => {
+module.exports.deleteCommentByIdAsync = async (commentId) => {
   const wasDeleted = await gCommentsTable.deleteCommentByIdAsync(commentId);
   /*const dbResponse = await connection.query(
     `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = $1;`,
