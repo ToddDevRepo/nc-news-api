@@ -25,6 +25,14 @@ class CommentsTable extends SqlTableDefs {
       [commentData.username, commentData.body, articleId]
     );
   }
+
+  async deleteCommentByIdAsync(commentId) {
+    return await this.#_queryable.deleteItemWhereAsync(
+      this.tableName,
+      this.fields.id,
+      commentId
+    );
+  }
 }
 
 module.exports.CommentsTable = CommentsTable;

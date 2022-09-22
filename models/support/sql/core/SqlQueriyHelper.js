@@ -29,6 +29,14 @@ class SqlQueryHelper {
     return inserted;
   }
 
+  async deleteItemWhereAsync(table, colNm, val) {
+    const dbResult = await this.#_queryable.query(
+      `DELETE FROM ${table} WHERE ${colNm} = $1;`,
+      [val]
+    );
+    return dbResult.rowCount !== 0;
+  }
+
   async selectAllRowsAsync(tableName) {
     const rows = this.queryForRowsAsync(`SELECT * FROM ${tableName};`);
     return rows;

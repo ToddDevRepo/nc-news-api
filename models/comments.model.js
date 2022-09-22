@@ -36,10 +36,11 @@ module.exports.insertArticleCommentAsync = async (articleId, commentData) => {
 };
 
 module.exports.deleteCommentById = async (commentId) => {
-  const dbResponse = await connection.query(
+  const wasDeleted = await gCommentsTable.deleteCommentByIdAsync(commentId);
+  /*const dbResponse = await connection.query(
     `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = $1;`,
     [commentId]
-  );
-  if (dbResponse.rowCount === 0) return Promise.reject(commentNotFoundError);
-  return dbResponse;
+  );*/
+  if (!wasDeleted) return Promise.reject(commentNotFoundError);
+  return wasDeleted;
 };
