@@ -9,6 +9,14 @@ class CommentsTable extends SqlTableDefs {
     super(new SqlConfig(DBTables.Comments.name, DBTables.Comments.Fields));
     this.#_queryable = queryable;
   }
+
+  async selectCommentsByArticleId(articleId) {
+    return await this.#_queryable.selectAllRowsWhereAsync(
+      this.tableName,
+      this.fields.article_id,
+      articleId
+    );
+  }
 }
 
 module.exports.CommentsTable = CommentsTable;

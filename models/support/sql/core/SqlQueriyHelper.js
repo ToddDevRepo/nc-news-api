@@ -23,6 +23,14 @@ class SqlQueryHelper {
     const rows = this.queryForRowsAsync(`SELECT * FROM ${tableName};`);
     return rows;
   }
+
+  async selectAllRowsWhereAsync(tableName, colNm, val) {
+    const rows = this.queryForRowsAsync(
+      `SELECT * FROM ${tableName} WHERE ${colNm} = $1;`,
+      [val]
+    );
+    return rows;
+  }
 }
 
 module.exports.SqlQueryHelper = SqlQueryHelper;

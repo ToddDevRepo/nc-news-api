@@ -4,18 +4,23 @@ const { unprocessableEntity, commentNotFoundError } = require("../errors");
 const { DBTables, Endpoints } = require("../globals");
 const {
   selectArticleByIdAsync: selectArticleById,
+  selectArticleByIdAsync,
 } = require("./articles.model");
+const { ArticlesTable } = require("./support/sql/ArticlesTable");
+const { CommentsTable } = require("./support/sql/CommentsTable");
+const { gSqlQueryHelper } = require("./support/sql/sql-utils");
 
 module.exports.selectCommentsForArticleAsync = async (articleId) => {
-  const articleExistsPending = selectArticleById(articleId);
-  const getCommentsPending = connection.query(
-    `SELECT *
-    FROM ${DBTables.Comments.name}
-    WHERE ${DBTables.Comments.Fields.article_id} = $1;`,
-    [articleId]
-  );
-  const result = await Promise.all([getCommentsPending, articleExistsPending]);
-  const { rows: comments } = result[0];
+  const articleExistsPending = selectArticleByIdAsync(articleId);
+  const commentsTable = new CommentsTable(gSqlQueryHelper);
+  const selectCommentsPending =
+    commentsTable.selectCommentsByArticleId(articleId);
+
+  const result = await Promise.all([
+    selectCommentsPending,
+    articleExistsPending,
+  ]);
+  const comments = result[0];
   return comments;
 };
 
