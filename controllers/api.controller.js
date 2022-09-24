@@ -1,4 +1,3 @@
-const { json } = require("express");
 const {
   readEndpointsAsync: readEndpointsAsync,
 } = require("../models/api.model");
