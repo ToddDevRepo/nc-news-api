@@ -19,7 +19,7 @@ class CommentsTable extends SqlTableDefs {
   }
 
   async insertCommentForArticle(articleId, commentData) {
-    return await this.#_queryable.insertColumnValues(
+    return await this.#_queryable.insertColumnValuesAsync(
       this.tableName,
       [this.fields.author, this.fields.body, this.fields.article_id],
       [commentData.username, commentData.body, articleId]
