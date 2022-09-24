@@ -1,7 +1,7 @@
 const { unprocessableEntity } = require("../errors");
 const { Query: QueryArgs, QueryTypes } = require("../globals");
 const {
-  selectArticleByIdAsync: selectArticleByIdAsync,
+  selectArticleByIdAsync,
   selectAllArticlesAsync,
   updateArticleVotesAsync,
 } = require("../models/articles.model");
