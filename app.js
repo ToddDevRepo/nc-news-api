@@ -10,7 +10,7 @@ const {
   getArticleCommentsAsync,
   addArticleCommentAsync,
 } = require("./controllers/articles.controller");
-const { RemoveCommentById } = require("./controllers/comments.controller");
+const { RemoveCommentByIdAsync } = require("./controllers/comments.controller");
 const { getTopicsAsync } = require("./controllers/topics.controller");
 const { badRequestError, unprocessableEntity } = require("./errors");
 const { Endpoints } = require("./globals");
@@ -31,7 +31,7 @@ app.patch(Endpoints.ARTICLES_BY_ID_END, updateVotesForArticleIdAsync);
 app.get(Endpoints.ARTICLE_COMMENTS, getArticleCommentsAsync);
 app.post(Endpoints.ARTICLE_COMMENTS, addArticleCommentAsync);
 
-app.delete(Endpoints.COMMENTS_BY_ID_END, RemoveCommentById);
+app.delete(Endpoints.COMMENTS_BY_ID_END, RemoveCommentByIdAsync);
 
 //// Error Handling ///
 app.use((err, req, res, next) => {
