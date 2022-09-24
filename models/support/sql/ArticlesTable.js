@@ -1,5 +1,5 @@
 const { DBTables, QueryTypes } = require("../../../globals");
-const { SortBySanitiser } = require("../sql-sanitiser");
+const { SortBySanitiser } = require("./core/sql-sanitiser");
 const { SqlConfig } = require("./core/SqlConfig");
 const { SqlTableDefs } = require("./core/SqlTableDefs");
 
