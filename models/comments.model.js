@@ -1,11 +1,5 @@
-const { Connection } = require("pg");
-const connection = require("../db/connection");
 const { unprocessableEntity, commentNotFoundError } = require("../errors");
-const { DBTables, Endpoints } = require("../globals");
-const {
-  selectArticleByIdAsync: selectArticleById,
-  selectArticleByIdAsync,
-} = require("./articles.model");
+const { selectArticleByIdAsync } = require("./articles.model");
 const { ArticlesTable } = require("./support/sql/ArticlesTable");
 const { CommentsTable } = require("./support/sql/CommentsTable");
 const { gSqlQueryHelper } = require("./support/sql/sql-utils");
