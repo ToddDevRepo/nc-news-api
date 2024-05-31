@@ -1,14 +1,14 @@
-const { unprocessableEntity } = require("../errors");
-const { Query: QueryArgs, QueryTypes } = require("../globals");
+const { unprocessableEntity } = require('../errors');
+const { Query: QueryArgs, QueryTypes } = require('../globals');
 const {
   selectArticleByIdAsync,
   selectAllArticlesAsync,
   updateArticleVotesAsync,
-} = require("../models/articles.model");
+} = require('../models/articles.model');
 const {
   insertArticleCommentAsync,
   selectCommentsForArticleAsync,
-} = require("../models/comments.model");
+} = require('../models/comments.model');
 
 module.exports.getArticleByIdAsync = async (request, response, next) => {
   const { article_id } = request.params;
@@ -37,12 +37,13 @@ module.exports.updateVotesForArticleIdAsync = async (
 
 module.exports.getArticlesAsync = async (request, response, next) => {
   const { query } = request;
+  const {
+    [QueryTypes.topic]: topic,
+    [QueryTypes.order]: order,
+    [QueryTypes.sortBy]: sortBy,
+  } = query;
   try {
-    const articles = await selectAllArticlesAsync(
-      query[QueryTypes.topic],
-      query[QueryTypes.sortBy],
-      query[QueryTypes.order]
-    );
+    const articles = await selectAllArticlesAsync(topic, sortBy, order);
     response.send({ articles });
   } catch (error) {
     next(error);
