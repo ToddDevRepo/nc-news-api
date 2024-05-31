@@ -61,9 +61,23 @@ In your .env.test file, add the line:
 
 PGDATABASE=nc_news_test
 
+You can also add other postgres environment variables
+PGUser=your-pg-username
+PGPASSWORD=your-pg-user-password
+
+### Setup PostgreSQL for Windows
+
+1. Install postgres for Windows
+2. Add path to postgres bin folder to environment variables paths. Make sure system32 is there too. E.g., add following to path:
+   C:\Program Files\PostgreSQL\16\bin\;C:\Windows\System32\;
+
+3. You can login using superuser (postgres): `$ psql -U postgres`. Use the password that you setup when you installed postgres. To exit, type `\\q`. To avoid using -U every time you enter psql, change the default user to 'postgres' by creating a PGUser environment system variable.
+   PGUser:postgres
+
 ### Create and Seed the Database
 
 Before attempting to create your databases, ensure Postgres is running.
+(For Windows: Win + R then type services.msc. Find the service and if not running, start it.)
 
 You can create your local development and test databases by entering the command:
 
@@ -77,7 +91,13 @@ The test database will be automatically seeded when you run your tests. To run t
 
 $ npm test
 
+To run the app in the localhost dev environment, type:
+$ npm start
+
 ## API Functions
 
 To view a description of the different api functions, goto the api endpoints root at:
 https://nc-news-api-live.herokuapp.com/api
+
+Or in your local development environment:
+http://localhost:9090/api
