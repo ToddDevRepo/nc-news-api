@@ -1,7 +1,7 @@
 class SortBySanitiser {
-  #_lookupTable;
-  constructor(lookupTable) {
-    this.#_lookupTable = lookupTable;
+  #_sortByFields;
+  constructor(sortByFields) {
+    this.#_sortByFields = sortByFields;
   }
 
   isValidOrder(order) {
@@ -10,7 +10,7 @@ class SortBySanitiser {
 
   sanitiseSortByField(sortByField) {
     sortByField = sortByField.toLowerCase();
-    return this.#_lookupTable[sortByField];
+    return this.#_sortByFields[sortByField];
   }
 }
 
