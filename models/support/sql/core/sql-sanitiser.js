@@ -8,9 +8,9 @@ class SortBySanitiser {
     return ['desc', 'asc'].includes(order.toLowerCase());
   }
 
-  sanitiseSortBy(sortBy) {
-    sortBy = sortBy.toLowerCase();
-    return this.#_lookupTable[sortBy];
+  sanitiseSortByField(sortByField) {
+    sortByField = sortByField.toLowerCase();
+    return this.#_lookupTable[sortByField];
   }
 }
 

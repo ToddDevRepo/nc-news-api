@@ -38,7 +38,7 @@ module.exports.selectAllArticlesAsync = async (
   sortBy = 'date',
   order = 'desc'
 ) => {
-  sortBy = gArticlesTable.sortSanitizer.sanitiseSortBy(sortBy);
+  sortBy = gArticlesTable.sortSanitizer.sanitiseSortByField(sortBy);
   if (!sortBy || !gArticlesTable.sortSanitizer.isValidOrder(order))
     return Promise.reject(badQueryError);
   const commentsTable = new CommentsTable(gSqlQueryHelper);
