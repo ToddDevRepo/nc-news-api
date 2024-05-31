@@ -32,11 +32,11 @@ class SqlQueryHelper {
   }
 
   async deleteItemWhereAsync(table, column, value) {
-    const dbResult = await this.#_connection.query(
+    const { rowCount } = await this.#_connection.query(
       `DELETE FROM ${table} WHERE ${column} = $1;`,
       [value]
     );
-    return dbResult.rowCount !== 0;
+    return rowCount !== 0;
   }
 
   async selectAllRowsAsync(tableName) {
