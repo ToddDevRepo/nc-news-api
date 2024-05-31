@@ -5,10 +5,10 @@ class SortBySanitiser {
   }
 
   isValidOrder(order) {
-    return ["desc", "asc"].includes(order.toLowerCase());
+    return ['desc', 'asc'].includes(order.toLowerCase());
   }
 
-  lookupSortBy(sortBy) {
+  sanitiseSortBy(sortBy) {
     sortBy = sortBy.toLowerCase();
     return this.#_lookupTable[sortBy];
   }

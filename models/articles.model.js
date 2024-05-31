@@ -4,10 +4,10 @@ const {
   unprocessableEntity,
   topicNotFoundError,
   badQueryError,
-} = require("../errors");
-const { ArticlesTable } = require("./support/sql/ArticlesTable");
-const { CommentsTable } = require("./support/sql/CommentsTable");
-const { gSqlQueryHelper } = require("./support/sql/sql-utils");
+} = require('../errors');
+const { ArticlesTable } = require('./support/sql/ArticlesTable');
+const { CommentsTable } = require('./support/sql/CommentsTable');
+const { gSqlQueryHelper } = require('./support/sql/sql-utils');
 
 const gArticlesTable = new ArticlesTable(gSqlQueryHelper);
 
@@ -35,10 +35,10 @@ module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
 
 module.exports.selectAllArticlesAsync = async (
   topic,
-  sortBy = "date",
-  order = "desc"
+  sortBy = 'date',
+  order = 'desc'
 ) => {
-  sortBy = gArticlesTable.sortSanitizer.lookupSortBy(sortBy);
+  sortBy = gArticlesTable.sortSanitizer.sanitiseSortBy(sortBy);
   if (!sortBy || !gArticlesTable.sortSanitizer.isValidOrder(order))
     return Promise.reject(badQueryError);
   const commentsTable = new CommentsTable(gSqlQueryHelper);
