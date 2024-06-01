@@ -22,11 +22,11 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
   return article;
 };
 
-module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
-  if (isNaN(incVotes)) return Promise.reject(unprocessableEntity);
+module.exports.updateArticleVotesAsync = async (article_id, newVotes) => {
+  if (isNaN(newVotes)) return Promise.reject(unprocessableEntity);
   const updated = await gArticlesTable.updateArticleVotesAsync(
     article_id,
-    incVotes
+    newVotes
   );
 
   if (!updated) return Promise.reject(articleNotFoundError);
@@ -35,16 +35,16 @@ module.exports.updateArticleVotesAsync = async (article_id, incVotes) => {
 
 module.exports.selectAllArticlesAsync = async (
   topic,
-  sortBy = 'date',
+  sortByField = 'date',
   order = 'desc'
 ) => {
-  sortBy = gArticlesTable.sortSanitizer.sanitiseSortByField(sortBy);
-  if (!sortBy || !gArticlesTable.sortSanitizer.isValidOrder(order))
+  sortByField = gArticlesTable.sortSanitizer.sanitiseSortByField(sortByField);
+  if (!sortByField || !gArticlesTable.sortSanitizer.isValidOrder(order))
     return Promise.reject(badQueryError);
   const commentsTable = new CommentsTable(gSqlQueryHelper);
   const articles = await gArticlesTable.selectSortedArticlesByFilterAsync(
     topic,
-    sortBy,
+    sortByField,
     order,
     commentsTable
   );
