@@ -1,14 +1,16 @@
 class PrefixedField {
   #_tableName;
-  #_fields;
 
   constructor(tableName, fields) {
     this.#_tableName = tableName;
-    this.#_fields = fields;
-    for (const fieldKey in this.#_fields) {
+    this.#_addFieldsAsProperties(fields);
+  }
+
+  #_addFieldsAsProperties(fields) {
+    for (const fieldKey in fields) {
       Object.defineProperty(this, fieldKey, {
         get: () => {
-          return `${this.#_tableName}.${this.#_fields[fieldKey]}`;
+          return `${this.#_tableName}.${fields[fieldKey]}`;
         },
       });
     }
