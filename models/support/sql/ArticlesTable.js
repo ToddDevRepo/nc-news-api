@@ -11,14 +11,15 @@ class ArticlesTable extends BaseSqlTable {
   constructor(queryHelper) {
     super(new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
     this.#_queryHelper = queryHelper;
-    this.#_sortBySanitizer = new SortBySanitiser({
+    const sortableFields = {
       date: this.fields.created_at,
       author: this.fields.author,
       title: this.fields.title,
       topic: this.fields.topic,
       votes: this.fields.votes,
       comment_count: ArticlesTable.#_commentCountField,
-    });
+    };
+    this.#_sortBySanitizer = new SortBySanitiser(sortableFields);
   }
 
   get sortSanitizer() {
@@ -40,12 +41,12 @@ GROUP BY ${this.prefixedField.id};`,
     );
   }
 
-  async updateArticleVotesAsync(articleId, incVotes) {
+  async updateArticleVotesAsync(articleId, newVotes) {
     return await this.#_queryHelper.queryForItemAsync(
       `UPDATE ${this.tableName}
     SET ${this.fields.votes} = votes + $1
     WHERE ${this.fields.id} = $2 RETURNING *;`,
-      [incVotes, articleId]
+      [newVotes, articleId]
     );
   }
 
@@ -55,22 +56,20 @@ GROUP BY ${this.prefixedField.id};`,
     order,
     commentsTable
   ) {
-    const sqlInfo = this.#_createFilteredArticlesQuery(
+    const queryInfo = this.#_createFilteredArticlesQuery(
       filter,
       sortBy,
       order,
       commentsTable
     );
-    //console.log(sqlInfo.str);
     return await this.#_queryHelper.queryForRowsAsync(
-      sqlInfo.str,
-      sqlInfo.args
+      queryInfo.sql,
+      queryInfo.params
     );
   }
 
   #_createFilteredArticlesQuery(filter, sortBy, order, commentsTable) {
-    const queryArgs = [];
-    let queryStr = `SELECT 
+    let querySql = `SELECT 
       ${this.prefixedField.id},
       ${this.prefixedField.title},
       ${this.prefixedField.topic},
@@ -83,14 +82,16 @@ GROUP BY ${this.prefixedField.id};`,
     FROM ${this.tableName}
     LEFT JOIN ${commentsTable.tableName}
     ON ${this.prefixedField.id}=${commentsTable.prefixedField.article_id}`;
+    const queryParams = [];
+
     if (filter) {
-      queryStr += ` WHERE ${QueryTypes.topic} = $1`;
-      queryArgs.push(filter);
+      querySql += ` WHERE ${QueryTypes.topic} = $1`;
+      queryParams.push(filter);
     }
-    queryStr += ` GROUP BY ${this.prefixedField.id}`;
-    if (sortBy && order) queryStr += ` ORDER BY ${sortBy} ${order}`;
-    queryStr += ';';
-    return { str: queryStr, args: queryArgs };
+    querySql += ` GROUP BY ${this.prefixedField.id}`;
+    if (sortBy && order) querySql += ` ORDER BY ${sortBy} ${order}`;
+    querySql += ';';
+    return { sql: querySql, params: queryParams };
   }
 }
 
