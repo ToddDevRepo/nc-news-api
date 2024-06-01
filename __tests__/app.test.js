@@ -1,10 +1,16 @@
-const fs = require("fs/promises");
-const sorted = require("jest-sorted");
-const request = require("supertest");
-const { app } = require("../app");
-const connection = require("../db/connection");
-const seed = require("../db/seeds/seed");
-const { Endpoints, Query, QueryTypes, DBTables, Paths } = require("../globals");
+const fs = require('fs/promises');
+const sorted = require('jest-sorted');
+const request = require('supertest');
+const { app } = require('../app');
+const connection = require('../db/connection');
+const seed = require('../db/seeds/seed');
+const {
+  Endpoints,
+  Query,
+  QueryTypes,
+  DBTables,
+  FilePaths,
+} = require('../globals');
 const testData = require(`../db/data/test-data/index.js`);
 const {
   articleNotFoundError,
@@ -13,8 +19,8 @@ const {
   topicNotFoundError,
   badQueryError,
   commentNotFoundError,
-} = require("../errors");
-const { forEach } = require("../db/data/test-data/articles");
+} = require('../errors');
+const { forEach } = require('../db/data/test-data/articles');
 
 beforeEach(() => {
   return seed(testData);
@@ -25,8 +31,8 @@ afterAll(() => {
 });
 
 describe(Endpoints.API_END, () => {
-  test("returns status 200 with endpoints as json object", async () => {
-    const json = await fs.readFile(Paths.ENDPOINTS_PATH, "utf-8");
+  test('returns status 200 with endpoints as json object', async () => {
+    const json = await fs.readFile(FilePaths.ENDPOINTS_JSON, 'utf-8');
     const { body } = await request(app).get(Endpoints.API_END).expect(200);
 
     expect(body).toEqual(JSON.parse(json));
@@ -34,27 +40,27 @@ describe(Endpoints.API_END, () => {
 });
 
 describe(Endpoints.TOPICS_END, () => {
-  describe("GET", () => {
-    test("returns status 200", () => {
+  describe('GET', () => {
+    test('returns status 200', () => {
       return request(app).get(Endpoints.TOPICS_END).expect(200);
     });
-    test("returns expected topics", () => {
+    test('returns expected topics', () => {
       return request(app)
         .get(Endpoints.TOPICS_END)
         .then(({ body }) => {
           expect(body).toEqual({
             topics: [
               {
-                description: "The man, the Mitch, the legend",
-                slug: "mitch",
+                description: 'The man, the Mitch, the legend',
+                slug: 'mitch',
               },
               {
-                description: "Not dogs",
-                slug: "cats",
+                description: 'Not dogs',
+                slug: 'cats',
               },
               {
-                description: "what books are made of",
-                slug: "paper",
+                description: 'what books are made of',
+                slug: 'paper',
               },
             ],
           });
@@ -64,36 +70,36 @@ describe(Endpoints.TOPICS_END, () => {
 });
 
 describe(Endpoints.ARTICLES_END, () => {
-  describe("GET by id", () => {
-    test("article path with valid id returns status 200", () => {
+  describe('GET by id', () => {
+    test('article path with valid id returns status 200', () => {
       return request(app).get(`${Endpoints.ARTICLES_END}/2`).expect(200);
     });
-    test("path with valid id returns expected article", () => {
+    test('path with valid id returns expected article', () => {
       return request(app)
         .get(`${Endpoints.ARTICLES_END}/2`)
         .then(({ body }) => {
           expect(body).toEqual({
             article: {
               article_id: 2,
-              title: "Sony Vaio; or, The Laptop",
-              topic: "mitch",
-              author: "icellusedkars",
-              body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
-              created_at: "2020-10-16T05:03:00.000Z",
+              title: 'Sony Vaio; or, The Laptop',
+              topic: 'mitch',
+              author: 'icellusedkars',
+              body: 'Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.',
+              created_at: '2020-10-16T05:03:00.000Z',
               votes: 0,
               comment_count: 0,
             },
           });
         });
     });
-    test("article has correct comment count", () => {
+    test('article has correct comment count', () => {
       return request(app)
         .get(`${Endpoints.ARTICLES_END}/1`)
         .then(({ body }) => {
           expect(body.article.comment_count).toBe(11);
         });
     });
-    test("path with valid but non-existent id returns 404 not found", () => {
+    test('path with valid but non-existent id returns 404 not found', () => {
       return request(app)
         .get(`${Endpoints.ARTICLES_END}/1000`)
         .expect(404)
@@ -101,7 +107,7 @@ describe(Endpoints.ARTICLES_END, () => {
           expect(body.msg).toEqual(articleNotFoundError.msg);
         });
     });
-    test("path with invalid id returns 400 bad request", () => {
+    test('path with invalid id returns 400 bad request', () => {
       return request(app)
         .get(`${Endpoints.ARTICLES_END}/badger`)
         .expect(400)
@@ -110,8 +116,8 @@ describe(Endpoints.ARTICLES_END, () => {
         });
     });
   });
-  describe("GET all", () => {
-    test("get all articles returns all the articles with status 200", async () => {
+  describe('GET all', () => {
+    test('get all articles returns all the articles with status 200', async () => {
       const { body } = await request(app)
         .get(Endpoints.ARTICLES_END)
         .expect(200);
@@ -131,13 +137,13 @@ describe(Endpoints.ARTICLES_END, () => {
         );
       });
     });
-    test("correctly sets comment count of each article", async () => {
+    test('correctly sets comment count of each article', async () => {
       const { body } = await request(app).get(Endpoints.ARTICLES_END);
 
       const article = body.articles.find((article) => article.article_id === 9);
       expect(article.comment_count).toBe(2);
     });
-    test("articles returned in descending date order by default", async () => {
+    test('articles returned in descending date order by default', async () => {
       const { body } = await request(app)
         .get(Endpoints.ARTICLES_END)
         .expect(200);
@@ -146,7 +152,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in descending date order when desc used", async () => {
+    test('articles returned in descending date order when desc used', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=desc`)
         .expect(200);
@@ -155,7 +161,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending date order if you set order to ask", async () => {
+    test('articles returned in ascending date order if you set order to ask', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=asc`)
         .expect(200);
@@ -164,7 +170,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("articles returned in descending date order when order is sent in uppercase", async () => {
+    test('articles returned in descending date order when order is sent in uppercase', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=DESC`)
         .expect(200);
@@ -173,7 +179,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending date order when order is sent in uppercase", async () => {
+    test('articles returned in ascending date order when order is sent in uppercase', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=ASC`)
         .expect(200);
@@ -182,21 +188,21 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("400 bad query returned when order is nonsense", async () => {
+    test('400 bad query returned when order is nonsense', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.order}=badger`)
         .expect(400);
 
       expect(body.msg).toEqual(badQueryError.msg);
     });
-    test("400 bad query returned when sort_by is nonsense", async () => {
+    test('400 bad query returned when sort_by is nonsense', async () => {
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=badger`)
         .expect(400);
 
       expect(body.msg).toEqual(badQueryError.msg);
     });
-    test("articles returned in descending author order when desc used", async () => {
+    test('articles returned in descending author order when desc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.author}&${QueryTypes.order}=desc`
@@ -207,7 +213,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending author order when asc used", async () => {
+    test('articles returned in ascending author order when asc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.author}&${QueryTypes.order}=asc`
@@ -218,7 +224,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("articles returned in descending title order when desc used", async () => {
+    test('articles returned in descending title order when desc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.title}&${QueryTypes.order}=desc`
@@ -229,7 +235,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending title order when asc used", async () => {
+    test('articles returned in ascending title order when asc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.title}&${QueryTypes.order}=asc`
@@ -240,7 +246,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("articles returned in descending votes order when desc used", async () => {
+    test('articles returned in descending votes order when desc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=desc`
@@ -251,7 +257,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending votes order when asc used", async () => {
+    test('articles returned in ascending votes order when asc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=asc`
@@ -262,7 +268,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("articles returned in descending topics order when desc used", async () => {
+    test('articles returned in descending topics order when desc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.topic}&${QueryTypes.order}=desc`
@@ -273,7 +279,7 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("articles returned in ascending topics order when asc used", async () => {
+    test('articles returned in ascending topics order when asc used', async () => {
       const { body } = await request(app)
         .get(
           `${Endpoints.ARTICLES_END}?${QueryTypes.sortBy}=${DBTables.Articles.Fields.topic}&${QueryTypes.order}=asc`
@@ -284,8 +290,8 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("search by topic returns correct number of articles on given topic", async () => {
-      const query = "mitch";
+    test('search by topic returns correct number of articles on given topic', async () => {
+      const query = 'mitch';
       const { body } = await request(app).get(
         `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`
       );
@@ -295,8 +301,8 @@ describe(Endpoints.ARTICLES_END, () => {
         expect(article.topic).toBe(query);
       });
     });
-    test("search by topic returns articles in descending date order by default", async () => {
-      const query = "mitch";
+    test('search by topic returns articles in descending date order by default', async () => {
+      const query = 'mitch';
       const { body } = await request(app).get(
         `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`
       );
@@ -305,8 +311,8 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("search by topic returns articles in descending votes order when sorted by desc", async () => {
-      const query = "mitch";
+    test('search by topic returns articles in descending votes order when sorted by desc', async () => {
+      const query = 'mitch';
       const { body } = await request(app).get(
         `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}&${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=desc`
       );
@@ -315,8 +321,8 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: true,
       });
     });
-    test("search by topic returns articles in ascending votes order when sorted by asc", async () => {
-      const query = "mitch";
+    test('search by topic returns articles in ascending votes order when sorted by asc', async () => {
+      const query = 'mitch';
       const { body } = await request(app).get(
         `${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}&${QueryTypes.sortBy}=${DBTables.Articles.Fields.votes}&${QueryTypes.order}=asc`
       );
@@ -325,25 +331,25 @@ describe(Endpoints.ARTICLES_END, () => {
         descending: false,
       });
     });
-    test("non-existent topic returns empty array", async () => {
-      const query = "d; sdf";
+    test('non-existent topic returns empty array', async () => {
+      const query = 'd; sdf';
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}?${QueryTypes.topic}=${query}`)
         .expect(200);
 
       expect(body.articles).toHaveLength(0);
     });
-    test("non-existent category returns articles", async () => {
-      const query = "mitch";
+    test('non-existent category returns articles', async () => {
+      const query = 'mitch';
       const { body } = await request(app)
-        .get(`${Endpoints.ARTICLES_END}?${"; sdhfk"}=${query}`)
+        .get(`${Endpoints.ARTICLES_END}?${'; sdhfk'}=${query}`)
         .expect(200);
 
       expect(body.articles).toHaveLength(12);
     });
   });
-  describe("GET article comments", () => {
-    test("get comments returns comments for given article", async () => {
+  describe('GET article comments', () => {
+    test('get comments returns comments for given article', async () => {
       const articleId = 9;
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -362,7 +368,7 @@ describe(Endpoints.ARTICLES_END, () => {
         );
       });
     });
-    test("get comments returns empty array for article with no comments", async () => {
+    test('get comments returns empty array for article with no comments', async () => {
       const articleId = 2;
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -370,15 +376,15 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.comments).toHaveLength(0);
     });
-    test("get comments returns 400 bad request if article id is junk", async () => {
-      const articleId = "badger";
+    test('get comments returns 400 bad request if article id is junk', async () => {
+      const articleId = 'badger';
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
         .expect(400);
 
       expect(body.msg).toBe(badRequestError.msg);
     });
-    test("get comments returns 404 article not found if article does not exist", async () => {
+    test('get comments returns 404 article not found if article does not exist', async () => {
       const articleId = 9000;
       const { body } = await request(app)
         .get(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -387,8 +393,8 @@ describe(Endpoints.ARTICLES_END, () => {
       expect(body.msg).toBe(articleNotFoundError.msg);
     });
   });
-  describe("PATCH", () => {
-    test("returns with status 200 and an article with incremented votes", async () => {
+  describe('PATCH', () => {
+    test('returns with status 200 and an article with incremented votes', async () => {
       const incBy = 123;
 
       const { body } = await request(app)
@@ -398,16 +404,16 @@ describe(Endpoints.ARTICLES_END, () => {
 
       const expected = {
         article_id: 2,
-        title: "Sony Vaio; or, The Laptop",
-        topic: "mitch",
-        author: "icellusedkars",
-        body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
-        created_at: "2020-10-16T05:03:00.000Z",
+        title: 'Sony Vaio; or, The Laptop',
+        topic: 'mitch',
+        author: 'icellusedkars',
+        body: 'Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.',
+        created_at: '2020-10-16T05:03:00.000Z',
         votes: 123,
       };
       expect(body).toEqual({ updatedArticle: expected });
     });
-    test("returns with status 200 and an article with decremented votes", async () => {
+    test('returns with status 200 and an article with decremented votes', async () => {
       const incBy = -5;
 
       const { body } = await request(app)
@@ -417,16 +423,16 @@ describe(Endpoints.ARTICLES_END, () => {
 
       const expected = {
         article_id: 2,
-        title: "Sony Vaio; or, The Laptop",
-        topic: "mitch",
-        author: "icellusedkars",
-        body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
-        created_at: "2020-10-16T05:03:00.000Z",
+        title: 'Sony Vaio; or, The Laptop',
+        topic: 'mitch',
+        author: 'icellusedkars',
+        body: 'Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.',
+        created_at: '2020-10-16T05:03:00.000Z',
         votes: -5,
       };
       expect(body).toEqual({ updatedArticle: expected });
     });
-    test("returns with status 422 (unprocessable entity) when there is no send body", async () => {
+    test('returns with status 422 (unprocessable entity) when there is no send body', async () => {
       const { body } = await request(app)
         .patch(`${Endpoints.ARTICLES_END}/2`)
         .send()
@@ -434,15 +440,15 @@ describe(Endpoints.ARTICLES_END, () => {
 
       expect(body.msg).toEqual(unprocessableEntity.msg);
     });
-    test("returns with status 422 (unprocessable entity) when increment is not number", async () => {
+    test('returns with status 422 (unprocessable entity) when increment is not number', async () => {
       const { body } = await request(app)
         .patch(`${Endpoints.ARTICLES_END}/2`)
-        .send({ inc_votes: "badger" })
+        .send({ inc_votes: 'badger' })
         .expect(422);
 
       expect(body.msg).toEqual(unprocessableEntity.msg);
     });
-    test("path with valid but non-existent id returns 404 not found", () => {
+    test('path with valid but non-existent id returns 404 not found', () => {
       return request(app)
         .patch(`${Endpoints.ARTICLES_END}/1000`)
         .send({ inc_votes: 1 })
@@ -451,7 +457,7 @@ describe(Endpoints.ARTICLES_END, () => {
           expect(body.msg).toEqual(articleNotFoundError.msg);
         });
     });
-    test("path with invalid id returns 400 bad request", () => {
+    test('path with invalid id returns 400 bad request', () => {
       return request(app)
         .patch(`${Endpoints.ARTICLES_END}/badger`)
         .send({ inc_votes: 1 })
@@ -461,11 +467,11 @@ describe(Endpoints.ARTICLES_END, () => {
         });
     });
   });
-  describe("POST", () => {
-    describe("Add comment to articlel", () => {
-      test("returns status 201 and the inserted comment.", async () => {
+  describe('POST', () => {
+    describe('Add comment to articlel', () => {
+      test('returns status 201 and the inserted comment.', async () => {
         const articleId = 9;
-        const input = { username: "rogersop", body: "some body" };
+        const input = { username: 'rogersop', body: 'some body' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -481,9 +487,9 @@ describe(Endpoints.ARTICLES_END, () => {
           created_at: expect.any(String),
         });
       });
-      test("return status 422 unprocessable entity if username does not exist in users table", async () => {
+      test('return status 422 unprocessable entity if username does not exist in users table', async () => {
         const articleId = 9;
-        const input = { username: "badger", body: "some body" };
+        const input = { username: 'badger', body: 'some body' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -492,9 +498,9 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(unprocessableEntity.msg);
       });
-      test("return status 422 unprocessable entity if article id does not exist", async () => {
+      test('return status 422 unprocessable entity if article id does not exist', async () => {
         const articleId = 90000;
-        const input = { username: "rogersop", body: "some body" };
+        const input = { username: 'rogersop', body: 'some body' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -503,9 +509,9 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(unprocessableEntity.msg);
       });
-      test("return status 422 unprocessable entity if body not present", async () => {
+      test('return status 422 unprocessable entity if body not present', async () => {
         const articleId = 9;
-        const input = { username: "rogersop" };
+        const input = { username: 'rogersop' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -514,9 +520,9 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(unprocessableEntity.msg);
       });
-      test("return status 400 bad request if article id not a number", async () => {
-        const articleId = "badger";
-        const input = { username: "rogersop", body: "some stuff" };
+      test('return status 400 bad request if article id not a number', async () => {
+        const articleId = 'badger';
+        const input = { username: 'rogersop', body: 'some stuff' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -525,9 +531,9 @@ describe(Endpoints.ARTICLES_END, () => {
 
         expect(body.msg).toBe(badRequestError.msg);
       });
-      test("return status 422 unprocessable entity if username not present", async () => {
+      test('return status 422 unprocessable entity if username not present', async () => {
         const articleId = 9;
-        const input = { body: "some body" };
+        const input = { body: 'some body' };
 
         const { body } = await request(app)
           .post(`${Endpoints.ARTICLES_END}/${articleId}/comments`)
@@ -541,14 +547,14 @@ describe(Endpoints.ARTICLES_END, () => {
 });
 
 describe(Endpoints.COMMENTS_END, () => {
-  describe("DELETE comment", () => {
-    test("successful delete return status 204 No Content", async () => {
+  describe('DELETE comment', () => {
+    test('successful delete return status 204 No Content', async () => {
       const commentId = 1;
       await request(app)
         .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
         .expect(204);
     });
-    test("successful delete deletes selected comment", async () => {
+    test('successful delete deletes selected comment', async () => {
       const commentId = 1;
       let commentExists = await commentWithIdExists(commentId);
 
@@ -559,8 +565,8 @@ describe(Endpoints.COMMENTS_END, () => {
       commentExists = await commentWithIdExists(commentId);
       expect(commentExists).toBe(false);
     });
-    test("returns bad request if comment id is junk", async () => {
-      const commentId = "badger";
+    test('returns bad request if comment id is junk', async () => {
+      const commentId = 'badger';
 
       const { body } = await request(app)
         .delete(`${Endpoints.COMMENTS_END}/${commentId}`)
@@ -568,7 +574,7 @@ describe(Endpoints.COMMENTS_END, () => {
 
       expect(body.msg).toBe(badRequestError.msg);
     });
-    test("returns comment not found if comment id does not exist", async () => {
+    test('returns comment not found if comment id does not exist', async () => {
       const commentId = 100000;
 
       const { body } = await request(app)
