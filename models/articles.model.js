@@ -24,13 +24,13 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
 
 module.exports.updateArticleVotesAsync = async (article_id, newVotes) => {
   if (isNaN(newVotes)) return Promise.reject(unprocessableEntity);
-  const updated = await gArticlesTable.updateArticleVotesAsync(
+  const wasUpdated = await gArticlesTable.updateArticleVotesAsync(
     article_id,
     newVotes
   );
 
-  if (!updated) return Promise.reject(articleNotFoundError);
-  return updated;
+  if (!wasUpdated) return Promise.reject(articleNotFoundError);
+  return wasUpdated;
 };
 
 module.exports.selectAllArticlesAsync = async (
