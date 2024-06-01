@@ -1,23 +1,23 @@
-const { DBTables, QueryTypes } = require("../../../globals");
-const { SortBySanitiser } = require("./core/sql-sanitiser");
-const { SqlConfig } = require("./core/SqlConfig");
-const { SqlTableDefs } = require("./core/SqlTableDefs");
+const { DBTables, QueryTypes } = require('../../../globals');
+const { SortBySanitiser } = require('./core/sql-sanitiser');
+const { SqlConfig } = require('./core/SqlConfig');
+const { SqlTableDefs } = require('./core/SqlTableDefs');
 
 class ArticlesTable extends SqlTableDefs {
-  #_commentCountField = "comment_count";
-  #_queryable;
+  static #_commentCountField = 'comment_count';
+  #_queryHelper;
   #_sortBySanitizer;
 
-  constructor(queryable) {
+  constructor(queryHelper) {
     super(new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
-    this.#_queryable = queryable;
+    this.#_queryHelper = queryHelper;
     this.#_sortBySanitizer = new SortBySanitiser({
       date: this.fields.created_at,
       author: this.fields.author,
       title: this.fields.title,
       topic: this.fields.topic,
       votes: this.fields.votes,
-      comment_count: this.#_commentCountField,
+      comment_count: ArticlesTable.#_commentCountField,
     });
   }
 
@@ -26,9 +26,11 @@ class ArticlesTable extends SqlTableDefs {
   }
 
   async getArticleByIdWithCommentCountAsync(id, commentsTable) {
-    return await this.#_queryable.queryForItemAsync(
+    return await this.#_queryHelper.queryForItemAsync(
       `SELECT ${this.prefixedField.all}, 
-      COUNT(${commentsTable.fields.id})::INTEGER AS ${this.#_commentCountField}
+      COUNT(${commentsTable.fields.id})::INTEGER AS ${
+        ArticlesTable.#_commentCountField
+      }
 FROM ${this.tableName}
 LEFT JOIN ${commentsTable.tableName}
 ON ${this.prefixedField.id}=${commentsTable.prefixedField.article_id}
@@ -39,7 +41,7 @@ GROUP BY ${this.prefixedField.id};`,
   }
 
   async updateArticleVotesAsync(articleId, incVotes) {
-    return await this.#_queryable.queryForItemAsync(
+    return await this.#_queryHelper.queryForItemAsync(
       `UPDATE ${this.tableName}
     SET ${this.fields.votes} = votes + $1
     WHERE ${this.fields.id} = $2 RETURNING *;`,
@@ -60,7 +62,10 @@ GROUP BY ${this.prefixedField.id};`,
       commentsTable
     );
     //console.log(sqlInfo.str);
-    return await this.#_queryable.queryForRowsAsync(sqlInfo.str, sqlInfo.args);
+    return await this.#_queryHelper.queryForRowsAsync(
+      sqlInfo.str,
+      sqlInfo.args
+    );
   }
 
   #_createFilteredArticlesQuery(filter, sortBy, order, commentsTable) {
@@ -73,7 +78,7 @@ GROUP BY ${this.prefixedField.id};`,
       ${this.prefixedField.created_at},
        ${this.prefixedField.votes},
        CAST(COUNT(${commentsTable.prefixedField.id}) AS INT) AS ${
-      this.#_commentCountField
+      ArticlesTable.#_commentCountField
     }
     FROM ${this.tableName}
     LEFT JOIN ${commentsTable.tableName}
@@ -84,7 +89,7 @@ GROUP BY ${this.prefixedField.id};`,
     }
     queryStr += ` GROUP BY ${this.prefixedField.id}`;
     if (sortBy && order) queryStr += ` ORDER BY ${sortBy} ${order}`;
-    queryStr += ";";
+    queryStr += ';';
     return { str: queryStr, args: queryArgs };
   }
 }
