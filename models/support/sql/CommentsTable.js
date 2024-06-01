@@ -3,17 +3,15 @@ const { SqlConfig } = require('./core/SqlConfig');
 const { BaseSqlTable } = require('./core/BaseSqlTable');
 
 class CommentsTable extends BaseSqlTable {
-  #_queryable;
-
-  constructor(queryable) {
+  constructor(queryHelper) {
     super(
+      queryHelper,
       new SqlConfig(DBTableDefs.Comments.name, DBTableDefs.Comments.Fields)
     );
-    this.#_queryable = queryable;
   }
 
   async selectCommentsByArticleId(articleId) {
-    return await this.#_queryable.selectAllRowsWhereAsync(
+    return await this.queryHelper.selectAllRowsWhereAsync(
       this.tableName,
       this.fields.article_id,
       articleId
@@ -21,7 +19,7 @@ class CommentsTable extends BaseSqlTable {
   }
 
   async insertCommentForArticle(articleId, commentData) {
-    return await this.#_queryable.insertColumnValuesAsync(
+    return await this.queryHelper.insertColumnValuesAsync(
       this.tableName,
       [this.fields.author, this.fields.body, this.fields.article_id],
       [commentData.username, commentData.body, articleId]
@@ -29,7 +27,7 @@ class CommentsTable extends BaseSqlTable {
   }
 
   async deleteCommentByIdAsync(commentId) {
-    return await this.#_queryable.deleteItemWhereAsync(
+    return await this.queryHelper.deleteItemWhereAsync(
       this.tableName,
       this.fields.id,
       commentId

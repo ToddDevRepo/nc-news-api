@@ -3,15 +3,15 @@ const { SqlConfig } = require('./core/SqlConfig');
 const { BaseSqlTable } = require('./core/BaseSqlTable');
 
 class TopicsTable extends BaseSqlTable {
-  #_queryable;
-
-  constructor(queryable) {
-    super(new SqlConfig(DBTableDefs.Topics.name, DBTableDefs.Topics.Fields));
-    this.#_queryable = queryable;
+  constructor(queryHelper) {
+    super(
+      queryHelper,
+      new SqlConfig(DBTableDefs.Topics.name, DBTableDefs.Topics.Fields)
+    );
   }
 
   async selectAllTopicsAsync() {
-    return await this.#_queryable.selectAllRowsAsync(this.tableName);
+    return await this.queryHelper.selectAllRowsAsync(this.tableName);
   }
 }
 

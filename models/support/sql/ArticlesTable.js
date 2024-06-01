@@ -5,14 +5,13 @@ const { BaseSqlTable } = require('./core/BaseSqlTable');
 
 class ArticlesTable extends BaseSqlTable {
   static #_commentCountField = 'comment_count';
-  #_queryHelper;
   #_sortBySanitizer;
 
   constructor(queryHelper) {
     super(
+      queryHelper,
       new SqlConfig(DBTableDefs.Articles.name, DBTableDefs.Articles.Fields)
     );
-    this.#_queryHelper = queryHelper;
     const sortableFields = {
       date: this.fields.created_at,
       author: this.fields.author,
@@ -29,7 +28,7 @@ class ArticlesTable extends BaseSqlTable {
   }
 
   async getArticleByIdWithCommentCountAsync(id, commentsTable) {
-    return await this.#_queryHelper.queryForItemAsync(
+    return await this.queryHelper.queryForItemAsync(
       `SELECT ${this.prefixedField.all}, 
       COUNT(${commentsTable.fields.id})::INTEGER AS ${
         ArticlesTable.#_commentCountField
@@ -44,7 +43,7 @@ GROUP BY ${this.prefixedField.id};`,
   }
 
   async updateArticleVotesAsync(articleId, newVotes) {
-    return await this.#_queryHelper.queryForItemAsync(
+    return await this.queryHelper.queryForItemAsync(
       `UPDATE ${this.tableName}
     SET ${this.fields.votes} = votes + $1
     WHERE ${this.fields.id} = $2 RETURNING *;`,
@@ -64,7 +63,7 @@ GROUP BY ${this.prefixedField.id};`,
       order,
       commentsTable
     );
-    return await this.#_queryHelper.queryForRowsAsync(
+    return await this.queryHelper.queryForRowsAsync(
       queryInfo.sql,
       queryInfo.params
     );

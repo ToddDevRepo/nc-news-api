@@ -3,10 +3,16 @@ const { PrefixedField } = require('./PrefixedField');
 class BaseSqlTable {
   #_config;
   #_prefixedField;
+  #_queryHelper;
 
-  constructor(config) {
+  constructor(queryHelper, config) {
+    this.#_queryHelper = queryHelper;
     this.#_config = config;
     this.#_prefixedField = new PrefixedField(this.tableName, this.fields);
+  }
+
+  get queryHelper() {
+    return this.#_queryHelper;
   }
 
   get tableName() {
