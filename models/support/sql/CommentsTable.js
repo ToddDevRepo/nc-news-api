@@ -18,11 +18,11 @@ class CommentsTable extends BaseSqlTable {
     );
   }
 
-  async insertCommentForArticle(articleId, commentData) {
+  async insertCommentForArticle(articleId, commentDetails) {
     return await this.queryHelper.insertColumnValuesAsync(
       this.tableName,
       [this.fields.author, this.fields.body, this.fields.article_id],
-      [commentData.username, commentData.body, articleId]
+      [commentDetails.username, commentDetails.body, articleId]
     );
   }
 
