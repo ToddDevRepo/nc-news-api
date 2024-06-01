@@ -1,8 +1,8 @@
-const { unprocessableEntity, commentNotFoundError } = require("../errors");
-const { selectArticleByIdAsync } = require("./articles.model");
-const { ArticlesTable } = require("./support/sql/ArticlesTable");
-const { CommentsTable } = require("./support/sql/CommentsTable");
-const { gSqlQueryHelper } = require("./support/sql/sql-utils");
+const { unprocessableEntity, commentNotFoundError } = require('../errors');
+const { selectArticleByIdAsync } = require('./articles.model');
+const { ArticlesTable } = require('./support/sql/ArticlesTable');
+const { CommentsTable } = require('./support/sql/CommentsTable');
+const { gSqlQueryHelper } = require('./support/sql/sql-utils');
 
 const gCommentsTable = new CommentsTable(gSqlQueryHelper);
 
@@ -31,10 +31,6 @@ module.exports.insertArticleCommentAsync = async (articleId, commentData) => {
 
 module.exports.deleteCommentByIdAsync = async (commentId) => {
   const wasDeleted = await gCommentsTable.deleteCommentByIdAsync(commentId);
-  /*const dbResponse = await connection.query(
-    `DELETE FROM ${DBTables.Comments.name} WHERE ${DBTables.Comments.Fields.id} = $1;`,
-    [commentId]
-  );*/
   if (!wasDeleted) return Promise.reject(commentNotFoundError);
   return wasDeleted;
 };

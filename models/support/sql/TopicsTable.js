@@ -1,4 +1,4 @@
-const { DBTables } = require('../../../globals');
+const { DBTableDefs } = require('../../../globals');
 const { SqlConfig } = require('./core/SqlConfig');
 const { BaseSqlTable } = require('./core/BaseSqlTable');
 
@@ -6,7 +6,7 @@ class TopicsTable extends BaseSqlTable {
   #_queryable;
 
   constructor(queryable) {
-    super(new SqlConfig(DBTables.Topics.name, DBTables.Topics.Fields));
+    super(new SqlConfig(DBTableDefs.Topics.name, DBTableDefs.Topics.Fields));
     this.#_queryable = queryable;
   }
 

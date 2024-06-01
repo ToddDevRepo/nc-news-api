@@ -1,4 +1,4 @@
-const { DBTables, QueryTypes } = require('../../../globals');
+const { DBTableDefs, QueryTypes } = require('../../../globals');
 const { SortBySanitiser } = require('./core/sql-sanitiser');
 const { SqlConfig } = require('./core/SqlConfig');
 const { BaseSqlTable } = require('./core/BaseSqlTable');
@@ -9,7 +9,9 @@ class ArticlesTable extends BaseSqlTable {
   #_sortBySanitizer;
 
   constructor(queryHelper) {
-    super(new SqlConfig(DBTables.Articles.name, DBTables.Articles.Fields));
+    super(
+      new SqlConfig(DBTableDefs.Articles.name, DBTableDefs.Articles.Fields)
+    );
     this.#_queryHelper = queryHelper;
     const sortableFields = {
       date: this.fields.created_at,

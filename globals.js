@@ -19,7 +19,7 @@ class QueryTypes {
   static order = 'order';
 }
 
-class DBTables {
+class DBTableDefs {
   static Articles = {
     name: 'articles',
     Fields: {
@@ -48,5 +48,5 @@ class DBTables {
 
 module.exports.Endpoints = Endpoints;
 module.exports.FilePaths = FilePaths;
-module.exports.DBTables = DBTables;
+module.exports.DBTableDefs = DBTableDefs;
 module.exports.QueryTypes = QueryTypes;
