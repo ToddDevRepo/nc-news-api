@@ -1,9 +1,9 @@
 const { DBTables, QueryTypes } = require('../../../globals');
 const { SortBySanitiser } = require('./core/sql-sanitiser');
 const { SqlConfig } = require('./core/SqlConfig');
-const { SqlTableDefs } = require('./core/SqlTableDefs');
+const { BaseSqlTable } = require('./core/BaseSqlTable');
 
-class ArticlesTable extends SqlTableDefs {
+class ArticlesTable extends BaseSqlTable {
   static #_commentCountField = 'comment_count';
   #_queryHelper;
   #_sortBySanitizer;

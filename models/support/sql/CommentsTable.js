@@ -1,8 +1,8 @@
-const { DBTables } = require("../../../globals");
-const { SqlConfig } = require("./core/SqlConfig");
-const { SqlTableDefs } = require("./core/SqlTableDefs");
+const { DBTables } = require('../../../globals');
+const { SqlConfig } = require('./core/SqlConfig');
+const { BaseSqlTable } = require('./core/BaseSqlTable');
 
-class CommentsTable extends SqlTableDefs {
+class CommentsTable extends BaseSqlTable {
   #_queryable;
 
   constructor(queryable) {
