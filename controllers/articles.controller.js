@@ -3,7 +3,7 @@ const { Query: QueryArgs, QueryTypes } = require('../globals');
 const {
   selectArticleByIdAsync,
   selectAllArticlesAsync,
-  updateArticleVotesAsync,
+  incrementArticleVotesByAsync,
 } = require('../models/articles.model');
 const {
   insertArticleCommentAsync,
@@ -28,8 +28,11 @@ module.exports.updateVotesForArticleIdAsync = async (
   const { article_id } = request.params;
   const { body: incObj } = request;
   try {
-    const updated = await updateArticleVotesAsync(article_id, incObj.inc_votes);
-    response.send({ updatedArticle: updated });
+    const updatedArticle = await incrementArticleVotesByAsync(
+      article_id,
+      incObj.inc_votes
+    );
+    response.send({ updatedArticle });
   } catch (error) {
     next(error);
   }

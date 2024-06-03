@@ -22,11 +22,14 @@ module.exports.selectArticleByIdAsync = async (articleId) => {
   return article;
 };
 
-module.exports.updateArticleVotesAsync = async (article_id, newVotes) => {
-  if (isNaN(newVotes)) return Promise.reject(unprocessableEntity);
-  const wasUpdated = await gArticlesTable.updateArticleVotesAsync(
+module.exports.incrementArticleVotesByAsync = async (
+  article_id,
+  numberOfVotes
+) => {
+  if (isNaN(numberOfVotes)) return Promise.reject(unprocessableEntity);
+  const wasUpdated = await gArticlesTable.incrementArticleVotesAsync(
     article_id,
-    newVotes
+    numberOfVotes
   );
 
   if (!wasUpdated) return Promise.reject(articleNotFoundError);

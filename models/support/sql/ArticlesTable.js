@@ -42,12 +42,12 @@ GROUP BY ${this.prefixedField.id};`,
     );
   }
 
-  async updateArticleVotesAsync(articleId, newVotes) {
+  async incrementArticleVotesAsync(articleId, numberOfVotes) {
     return await this.queryHelper.queryForItemAsync(
       `UPDATE ${this.tableName}
     SET ${this.fields.votes} = votes + $1
     WHERE ${this.fields.id} = $2 RETURNING *;`,
-      [newVotes, articleId]
+      [numberOfVotes, articleId]
     );
   }
 
