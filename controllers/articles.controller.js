@@ -57,7 +57,7 @@ module.exports.getArticleCommentsAsync = async (request, response, next) => {
   const { article_id } = request.params;
   try {
     const comments = await selectCommentsForArticleAsync(article_id);
-    response.send({ comments: comments });
+    response.send({ comments });
   } catch (error) {
     next(error);
   }
